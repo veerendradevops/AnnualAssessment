@@ -1,0 +1,65 @@
+package com.lisi.annaulAssessment.DAO;
+
+import java.util.List;
+
+import com.lisi.annaualAssessment.orm.AcknowledgmentSection;
+import com.lisi.annaualAssessment.orm.CensusForm;
+import com.lisi.annaualAssessment.orm.InterpersonalSkills;
+import com.lisi.annaualAssessment.orm.JobKnowledgeAndSkill;
+import com.lisi.annaualAssessment.orm.TrainingAndDevelopment;
+
+public interface NonExemptEmployeeDao {
+
+	public List<CensusForm> getEmployeeInformation();
+
+	public List<CensusForm> getNonExemptEmployeeList(String clockNumber);
+
+	public void addJobKnowledgeAndSkillsData(JobKnowledgeAndSkill jobKnowledgeAndSkill,String year);
+	
+	public List<JobKnowledgeAndSkill> getJobKnowledgeList(String clockId);
+
+	public void addInterpersonalSkillsData(InterpersonalSkills interpersonalSkills,String year);
+	
+	public List<InterpersonalSkills> getInterpersonalList(String clockId);
+
+	/*void addNonExemptSummaryData(SummaryOfPerformanceReview nonExemptSummaryOrm);
+	
+	public List<SummaryOfPerformanceReview> getSummaryOfPerformanceReviewList(String clockId);*/
+
+	public void addNonExemptAcknowledgmentSectionData(AcknowledgmentSection acknowledgmentSection);
+	
+	public List<AcknowledgmentSection> getAcknowledgementData(String empClockNumber);
+	
+	/*public List<TrainingorDevelopmenData> addNonExemptTrainingorDevelopmenData(
+			String empClockNumber);
+*/
+	public void addNonExemptTrainingorDevelopmenData(TrainingAndDevelopment trainingAndDevelopement,String year);
+	
+	public List<TrainingAndDevelopment> getTrainingAndDevelopmentData(
+			String empClockNumber);
+
+	
+
+	/*public void deleteEmp(int clockId);
+
+	public void deleteJobknowledgeDao(int clockId);
+
+	public void deleteNonExemptSummaryDao(String empClockNumber);*/
+
+	public void addNonExemptTrainingorDevelopmenData(TrainingAndDevelopment trainingAndDevelopement);
+
+	public void deleteAcknowledgmentSectionData(String empClockNumber);
+
+	public String getYear(String ormClass);
+
+	
+
+	
+
+	
+
+	
+
+
+
+}

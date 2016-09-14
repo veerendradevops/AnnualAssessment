@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<context:property-placeholder
+		location="classpath:resources/database.properties,
+	classpath:resources/ldap.properties"
+		ignore-unresolvable="true" />
+
+	<context:component-scan base-package="com.lisi.annaulAssessment" />
+
+	<tx:annotation-driven transaction-manager="hibernateTransactionManager" />
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass">
+			<value>
+				org.springframework.web.servlet.view.tiles2.TilesView
+			</value>
+		</property>
+	</bean>
+	<bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/config/tiles.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="ldap" class="com.lisi.annaulAssessment.pojo.LDAPDetails">
+		<property name="url" value="${url}"></property>
+		<property name="domain" value="${domain}"></property>
+	</bean>
+
+	<bean id="userContext"
+		class="com.lisi.annaulAssessment.controller.ThreadLocalUserContext" />
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${database.driver}" />
+		<property name="url" value="${database.url}" />
+		<property name="username" value="${database.user}" />
+		<property name="password" value="${database.password}" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.lisi.annaualAssessment.orm.CensusForm</value>
+				<value>com.lisi.annaualAssessment.orm.Hierarchy</value>
+
+				<value>com.lisi.annaualAssessment.orm.Disciplinary</value>
+				<value>com.lisi.annaualAssessment.orm.PresentYearObjectives</value>
+				<value>com.lisi.annaualAssessment.orm.InterpersonalSkills</value>
+
+				<value>com.lisi.annaualAssessment.orm.JobKnowledgeAndSkill</value>
+
+				<value>com.lisi.annaualAssessment.orm.TrainingAndDevelopment</value>
+				
+				<value>com.lisi.annaualAssessment.orm.SkillsSelfAssessment</value>
+            <value>com.lisi.annaualAssessment.orm.ExemptTeamMember</value>
+            <value>com.lisi.annaualAssessment.orm.ExemptSection2</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<!-- <prop key="hibernate.show_sql">${hibernate.show_sql}</prop> -->
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.connection.autocommit">${hibernate.connection.autocommit}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="hibernateTransactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+</beans>
