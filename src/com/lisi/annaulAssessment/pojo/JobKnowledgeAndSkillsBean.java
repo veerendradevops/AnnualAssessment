@@ -25,6 +25,8 @@ public class JobKnowledgeAndSkillsBean {
 	private String supervisorsOveralComments;
 
 	private String avgScore;
+	
+	private String summaryAvgScore;
 
 	public int getClockId() {
 		return clockId;
@@ -113,5 +115,14 @@ public class JobKnowledgeAndSkillsBean {
 	public void setAvgScore(String avgScore) {
 		this.avgScore = avgScore;
 	}
+
+	public String getSummaryAvgScore() {
+		return summaryAvgScore;
+	}
+
+	public void setSummaryAvgScore(String summaryAvgScore) {
+		this.summaryAvgScore = summaryAvgScore;
+	}
+	
 
 }

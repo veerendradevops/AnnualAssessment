@@ -15,98 +15,149 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.lisi.annaualAssessment.orm.CensusForm;
 import com.lisi.annaulAssessment.service.EmployeeService;
 import com.lisi.annaulAssessment.service.TMPersonalInformationService;
+import com.lisi.annaulAssessment.util.Converters;
 
 @Controller
 public class ExemptEmployeeController {
 
 	private static final Logger log = Logger.getLogger(ExemptEmployeeController.class);
 
-	
 	@Autowired
 	private EmployeeService empServie;
-	
+
 	@Autowired
 	private TMPersonalInformationService tmservice;
 
-	private static String clockNumber;
+	/*private static String clockNumber;
 
-	private static String annaylYear;
+	private static String annaylYear;*/
 
+	// anchor tag link
+	
 	@RequestMapping(value = "/teamMemberPersonalInfo", method = RequestMethod.GET)
 	public String teamMemberPersonalInfo(@RequestParam("clockNum") String empClockNumber,
-			@RequestParam("year") String year, Model model) {
+			@RequestParam("year") String year,@RequestParam("status") String empStatus, Model model,HttpSession session) {
 
 		log.info("teamMemberPersonalInfo");
 		log.info(empClockNumber);
-		ExemptEmployeeController.setClockNumber(empClockNumber);
-		ExemptEmployeeController.setAnnaylYear(year);
-
-		List<CensusForm> employeeDetails = tmservice.getEmployeeDetails(empClockNumber);
-
-		for(CensusForm c : employeeDetails){
+		try {
+		//	ExemptEmployeeController.setClockNumber(empClockNumber);
 			
-			log.info("if");
-		}
+			session.setAttribute("exemptEmp", empClockNumber);
+			session.setAttribute("year", year.trim());
+	//		session.setAttribute("loginEmployeeStatus", empStatus);
+			
+			session.setAttribute("supervisorstatus", empStatus);
+			
+		//	session.removeAttribute("loginClockNumber");
+		//	ExemptEmployeeController.setAnnaylYear(year);
 		
-		model.addAttribute("employeeDetails", employeeDetails);
+			List<CensusForm> employeeDetails = tmservice.getEmployeeDetails(empClockNumber,year.trim());
+
+			for (CensusForm c : employeeDetails) {
+
+				log.info("if");
+			}
+
+			session.setAttribute("onlyEmployee", "EmployeeSupervisor");
+			model.addAttribute("employeeDetails", employeeDetails);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		// return "exemptEmployee";
 
 		return "exemptEmployee";
 	}
+	
+	// supervisor form...
 
 	@RequestMapping(value = "/exemptEmployee", method = RequestMethod.GET)
-	public String exemptEmployee(@RequestParam("clockNum") String loginEmpClock,Model model) {
+	public String exemptEmployee(@RequestParam("clockNum") String loginEmpClock, Model model) {
 
 		log.info("exemptEmp");
 		log.info(loginEmpClock);
 
-		List<CensusForm> census = empServie.getExemptEmployees(Integer.parseInt(loginEmpClock.trim()));
+		List<CensusForm> census = empServie.getExemptEmployees(Integer.parseInt(loginEmpClock.trim()),"exempt",Converters.getCurrentYear());
 
+		double yellowHourlyRate = 0;
+		double yellowAnnaulRate = 0;
+		int numberOfEmployees=0;
+
+		for (CensusForm c : census) {
+
+			if (c.getCurrentHrlyRate().isEmpty()) {
+
+			} else {
+				yellowHourlyRate += Double.parseDouble(c.getCurrentHrlyRate().trim());
+			}
+			
+			if(c.getAnnaulRate().isEmpty()){
+				
+				
+			}else{
+				yellowAnnaulRate += Double.parseDouble(c.getAnnaulRate().trim());
+			}
+			numberOfEmployees++;
+			System.out.println("yes");
+		}
+
+		model.addAttribute("yellowHourlyRate", yellowHourlyRate);
+		model.addAttribute("yellowAnnaulRate" , yellowAnnaulRate);
+		model.addAttribute("numberofemployees", numberOfEmployees);
+		
 		model.addAttribute("empDetails", census);
 
 		return "managerScreen";
 	}
 
-	public static String getClockNumber() {
-		return clockNumber;
-	}
-
-	public static void setClockNumber(String clockNumber) {
-		ExemptEmployeeController.clockNumber = clockNumber;
-	}
-
-	public static String getAnnaylYear() {
-		return annaylYear;
-	}
-
-	public static void setAnnaylYear(String annaylYear) {
-		ExemptEmployeeController.annaylYear = annaylYear;
-	}
 	
-	// employee and supervisor forms
-	
+
+	// method call happens when an employee is assocated with employee and supervisor.
+
 	@RequestMapping(value = "/employeeForm", method = RequestMethod.GET)
-	public String employeeForm( Model model,HttpSession session) {
+	public String employeeForm(Model model, HttpSession session) {
 
-		log.info("employeeForm");
-		
-		
-		List<CensusForm> employeeDetails = tmservice.getEmployeeDetails(LoginController.getLoginClockNumber().trim());
+		log.info("directly accessing the TeamMember Form.. from the supervisor screen.");
+	//	log.info(LoginController.getLoginClockNumber());
+		StringBuffer roleBased = new StringBuffer("");
+		String loginClockNumber =(String)session.getAttribute("loginClockNumber");
+		log.info(loginClockNumber);
+		try{
+		List<CensusForm> employeeDetails = tmservice.getEmployeeDetails
+				(loginClockNumber.trim(),Converters.getCurrentYear());
 
-		for(CensusForm c : employeeDetails){
+		if(employeeDetails.size()==1){
 			
-			log.info("if");
+			for(CensusForm c : employeeDetails){
+				
+					
+			}
+			
+			
+		}else if(employeeDetails.size()>1){
+			
+			throw new Exception("multiple records are found");
+		}
+		session.setAttribute("onlyEmployee", "Employee");
+
+		model.addAttribute("employeeDetails", employeeDetails);
 		}
 		
-		model.addAttribute("employeeDetails", employeeDetails);
+		catch(Exception e){
+			e.printStackTrace();
+			
+			if(e.getMessage().contains("multiple records are found")){
+				model.addAttribute("wrongUser", "<h6 style=color:red>multiple user's found with this username</h6>");
+				return "managerScreen";
+			}
+		}
+		// session.setAttribute("onlyEmployee", "forEmployee");
 
-	//	session.setAttribute("onlyEmployee", "forEmployee");
-		
 		// return "exemptEmployee";
 
 		return "exemptEmployee";
-	//	return "oneexemptEmployee";
+		// return "oneexemptEmployee";
 	}
 
 }

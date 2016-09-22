@@ -40,9 +40,9 @@ public class SkillsSelfAssessmentServiceImpl implements SkillsSelfAssessmentServ
 	}
 
 	@Override
-	public int fetchYearOfAnSkillsSelfAssessment(int clockNum) {
+	public int fetchYearOfAnSkillsSelfAssessment(int clockNum,String year) {
 		// TODO Auto-generated method stub
-		return skillsSelfAssessmentDAO.fetchYearOfAnSkillsSelfAssessment(clockNum);
+		return skillsSelfAssessmentDAO.fetchYearOfAnSkillsSelfAssessment(clockNum, year);
 	}
 	
 

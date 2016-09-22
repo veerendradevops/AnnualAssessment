@@ -48,6 +48,17 @@ public class JobKnowledgeAndSkill {
 	
 	@Column(name="AverageScore")
 	private String avgScore;
+	
+	@Column(name="SummaryPerformanceAvgScore")
+	private String summaryAvgScore;
+
+	public String getSummaryAvgScore() {
+		return summaryAvgScore;
+	}
+
+	public void setSummaryAvgScore(String summaryAvgScore) {
+		this.summaryAvgScore = summaryAvgScore;
+	}
 
 	public int getClockId() {
 		return clockId;

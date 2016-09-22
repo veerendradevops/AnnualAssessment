@@ -9,6 +9,7 @@
 	<%
 		year = Converters.getCurrentYear();
 		pageContext.setAttribute("year", year);
+		System.out.println("*******************************************************************************");
 	%>
 
 	<!-- Begin page -->
@@ -89,11 +90,7 @@
 
 											<c:if test="${!empty employee}">
 												<c:forEach var="empDetail" items="${employee}">
-													<tr>
-														<td><a href="#" style="margin-left: 9px;"><c:out
-																	value="${ empDetail.emplastName} ${ empDetail.empfirstName}"></c:out></a></td>
-														<!-- <td>&nbsp;</td> -->
-
+												
 														<%!String clockid;
 	String hashingValue;%>
 
@@ -108,6 +105,11 @@
 																	hashingValue = Converters.encrypt(String.valueOf(clocknum));
 																	application.setAttribute("hashing", hashingValue);
 														%>
+													<tr>
+														<td><a href="/AnnaulAssessmenT/teamMemberPersonalInformation.do?clockNum=${hashing}&annualYear=${empDetail.annaulYear}" style="margin-left: 9px;"><c:out
+																	value="${ empDetail.emplastName} ${ empDetail.empfirstName}"></c:out></a></td>
+														<!-- <td>&nbsp;</td> -->
+
 
 
 

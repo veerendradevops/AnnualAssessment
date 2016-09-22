@@ -65,11 +65,11 @@ public class UploadFormDAOImpl implements UploadFormDAO {
 
 		// delete Disciplinary form
 
-		Disciplinary disciplinary = new Disciplinary();
+		/*Disciplinary disciplinary = new Disciplinary();
 
 		disciplinary.setEmpClockNumber(delCensusForm.getEmpClockNumber());
 
-		sessionFactory.getCurrentSession().delete(disciplinary);
+		sessionFactory.getCurrentSession().delete(disciplinary);*/
 
 	}
 
@@ -118,7 +118,7 @@ public class UploadFormDAOImpl implements UploadFormDAO {
 	@Override
 	public void deleteDisciplinary(int delEmp) {
 
-		String hql = "DELETE FROM Disciplinary WHERE empClockNumber =?";
+		/*String hql = "DELETE FROM Disciplinary WHERE empClockNumber =?";
 
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 
@@ -132,7 +132,7 @@ public class UploadFormDAOImpl implements UploadFormDAO {
 		} else {
 
 			log.info(delEmp + " record is delted");
-		}
+		}*/
 
 	}
 

@@ -8,8 +8,10 @@ public interface ManagerEmployeeService {
 
 	public void savePresentYearObjectives(PresentYearObjectives presentyearObj,String yearOfEmp);
 	
-	public List<PresentYearObjectives> retrievePresentYearObjectives();
+	public PresentYearObjectives retrievePresentYearObjectives(String clock,String year);
 	
-	public void updateDevelopmentGoals(PresentYearObjectives developmentGoals);
+	public void updateDevelopmentGoals(PresentYearObjectives developmentGoals,String clock,String year);
+	
+	public void updateMeetingSummary(PresentYearObjectives meetingsummary);
 	
 }

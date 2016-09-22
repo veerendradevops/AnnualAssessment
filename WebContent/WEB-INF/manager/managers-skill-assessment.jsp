@@ -33,7 +33,7 @@
                                            <form:form action="/AnnaulAssessmenT/managerSkillAssessmentAction.do" method="GET" modelAttribute="exemptSection2Pojo">
                                             
                                                  <c:if test="${!empty skill1}">
-                                              <%--    <c:forEach var="managersskillassessmentt" items="${managersskillassessment}"> --%>
+                                                <c:forEach var="managersskillassessmentt" items="${managersskillassessment}"> 
                                                 <div class="form-group row">  
                                                 <div class="col-sm-8"><h6>Skills</h6></div><div class="col-sm-4"><h6>Competency Level</h6></div>
                                                     <div class="col-sm-8">
@@ -42,11 +42,16 @@
                                                         
                                                         <div class="col-sm-4">
 														<select class="form-control" id="exampleSelect1" name="Section2B1">
-														<option>${skill1}</option>
+														<%-- <option value="" ${skill1.selfManagementandLeadership5==''?'selected':''}>Pick a value</option>
+													<option value="Exceeds Job Requirements" ${skillsSelfAssessmentDetails.selfManagementandLeadership5=='Exceeds Job Requirements'?'selected':''}>Exceeds Job Requirements</option>
+													<option value="Meets Job Requirements" ${skillsSelfAssessmentDetails.selfManagementandLeadership5=='Meets Job Requirements'?'selected':''}>Meets Job Requirements</option>
+													<option value="Partially Meets Job Requirements" ${skillsSelfAssessmentDetails.selfManagementandLeadership5=='Partially Meets Job Requirements'?'selected':''}>Partially Meets Job Requirements</option>
+													<option value="Does Not Meet Job Requirement" ${skillsSelfAssessmentDetails.selfManagementandLeadership5=='Does Not Meet Job Requirement'?'selected':''}>Does Not Meet Job Requirement</option> --%>
+														 <option>${skill1}</option>
                                                          <option>Exceeds Job Requirements</option>
                                                          <option>Meets Job Requirements</option>
                                                         <option>Partially Meets Job Requirements</option>
-                                                        <option>Does Not Meet Job Requirement</option>
+                                                        <option>Does Not Meet Job Requirement</option> 
                                                     </select>
                                                         </div>
                                                 </div>
@@ -404,10 +409,10 @@ standards and goals overcoming obstacles.</p>
                                                
                                                 <div class="form-group row col-sm-12 col-xs-12">
           								
-          								 <button type="submit"  class="btn btn-primary  waves-light">5 of 10</button>
+          								 <button type="submit" class="btn btn-secondary m-l-5" >5 of 7</button>
           									<!-- <a href="summary-of-accomplishment-and-development-areas-for-improvement.jsp" class="btn btn-secondary m-l-5">5 of 10</a> -->
                                   		</div>
-                                  		<%-- </c:forEach> --%>
+                                  </c:forEach>  
                                   		</c:if>
                                   		
                                   		<c:if test="${empty skill1 }">
@@ -759,7 +764,7 @@ standards and goals overcoming obstacles.</p>
                                                
                                                 <div class="form-group row col-sm-12 col-xs-12">
           								
-          								 <button type="submit"  class="btn btn-primary  waves-light">5 of 10</button>
+          								 <button type="submit" class="btn btn-secondary m-l-5">5 of 7</button>
           									<!-- <a href="summary-of-accomplishment-and-development-areas-for-improvement.jsp" class="btn btn-secondary m-l-5">5 of 10</a> -->
                                   		</div>
                                   		

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.lisi.annaualAssessment.orm.CensusForm;
+import com.lisi.annaulAssessment.pojo.CensusFormPojo;
 import com.lisi.annaulAssessment.util.Converters;
 
 /**
@@ -29,14 +30,16 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	// returns all the exempt employees on where condition basiscs 
 	
 	@Override
-	public List<CensusForm> getExemptEmployees(int clockNumber) {
-		String statement = "from CensusForm where exemptOrNonExempt=? and supervisorClockNumber=? and annaulYear=?";
+	public List<CensusForm> getExemptEmployees(int clockNumber,String empStatus,String currentYear) {
+	//	String statement = "from CensusForm where exemptOrNonExempt=? and supervisorClockNumber=? and annaulYear=?";
 
+		String statement = "from CensusForm where supervisorClockNumber=? and annaulYear=?";
+		
 		Query query = sessionFactory.getCurrentSession().createQuery(statement);
 
-		query.setString(0, "exempt");
-		query.setInteger(1, clockNumber);
-		query.setString(2, Converters.getCurrentYear());
+	//	query.setString(0, empStatus);
+		query.setInteger(0, clockNumber);
+		query.setString(1, currentYear.trim());
 		// year should pass
 		
 		// sessionFactory.getCurrentSession().createQuery(query).list();
@@ -71,11 +74,11 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 
 	@Override
-	public int getEmployeeClockNumbers(String empName) {
+	public int getEmployeeClockNumbers(String empName,String year) {
 		
 		
 		int clockNumber = (int) sessionFactory.getCurrentSession().createQuery("select empClockNumber from Hierarchy  where employeeADName = :empName and apprisalYear = :year")
-				.setString("empName",empName).setString("year", Converters.getCurrentYear()).uniqueResult();
+				.setString("empName",empName).setString("year", year.trim()).uniqueResult();
 		/*
 		if(clockNumber.equals("null")){
 			
@@ -88,18 +91,38 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CensusForm> getEmployeeRole() {
+	public List<CensusForm> getEmployeeRole(String year) {
 		String statement = "from CensusForm where annaulYear=?";
 
 		Query query = sessionFactory.getCurrentSession().createQuery(statement);
 
-		query.setParameter(0,Converters.getCurrentYear());
+		query.setParameter(0,year.trim());
 		
 		List<CensusForm> censusFormData=query.list();
 		
 		return censusFormData;
-		// sessionFactory.getCurrentSession().createQuery(query).list();
-	//	return (List<CensusForm>) query.list();
+		
+	}
+
+
+	@Override
+	public CensusForm getLoginEmployeeDetails(int clockNumber,String username, String currentYear) {
+		
+		String statement = " from CensusForm where empClockNumber=? and annaulYear=?";
+		
+		Query query = sessionFactory.getCurrentSession().createQuery(statement);
+		
+		query.setInteger(0, clockNumber);
+		query.setString(1, currentYear);
+		
+		CensusForm census=(CensusForm)query.uniqueResult();
+		
+		if(census==null){
+			
+			return null;
+		}
+		
+		return census;
 	}
 
 

@@ -16,11 +16,11 @@ public interface ExemptSection2Service {
 	
 	
 	public void fillExemptSection2(ExemptSection2 es,String year);
-	public String insertExemptSection2();
-	public void fillExemptSection3(ExemptSection2 es);
-	public List<ExemptSection2> retriveObjectAchievementData();
-	public List<ExemptSection2> retriveManagerSkillsAssessmentData();
-	public List<ExemptSection2> retriveAssessmentSummaryData();
+	public String insertExemptSection2(ExemptSection2 exemptorm);
+	public void fillExemptSection3(ExemptSection2 es,String year);
+	public List<ExemptSection2> retriveObjectAchievementData(String clockNumber,String year);
+	public List<ExemptSection2> retriveManagerSkillsAssessmentData(String clock,String year);
+	public List<ExemptSection2> retriveAssessmentSummaryData(ExemptSection2 exemptorm);
 	public void fillAssessmentSummary(ExemptSection2 es,String year);
 	
 }

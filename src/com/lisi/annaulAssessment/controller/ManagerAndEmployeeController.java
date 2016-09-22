@@ -2,6 +2,8 @@ package com.lisi.annaulAssessment.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.lisi.annaualAssessment.orm.PresentYearObjectives;
+import com.lisi.annaulAssessment.service.ExemptTeamMemberService;
 import com.lisi.annaulAssessment.service.ManagerEmployeeService;
 
 @Controller
@@ -22,163 +25,297 @@ public class ManagerAndEmployeeController {
 	@Autowired
 	private ManagerEmployeeService managerEmpService;
 
+	private String exemptEmpClock, employeeYear;
+	
+	@Autowired
+	private LogoutController logoutController;
+	
+	@Autowired
+	private ExemptTeamMemberService exemptTeamMemberService;
+	 /*
+	  * 
+	  * present year objective anchor screeen..
+	  * 
+	  * */
+
 	@RequestMapping(value = "/presentYearObjectives", method = RequestMethod.GET)
-	public String presentYearObjectivesScreen(Model model) {
+	public String presentYearObjectivesScreen(Model model, HttpSession session) {
 
 		log.info("present Year Objectives");
+		exemptEmpClock = (String) session.getAttribute("exemptEmp");
+		employeeYear = (String) session.getAttribute("year");
+		log.info(exemptEmpClock);
+		try {
+			PresentYearObjectives presentYear = managerEmpService.retrievePresentYearObjectives(exemptEmpClock.trim(),
+					employeeYear.trim());
 
-		List<PresentYearObjectives> presentYear = managerEmpService.retrievePresentYearObjectives();
+			log.info(presentYear);
 
-		log.info(presentYear);
-		for (PresentYearObjectives present : presentYear) {
+			model.addAttribute("presentYearObjectives", presentYear);
+		} catch (Exception e) {
 
-			log.info(present.getEmpClockNumber());
+			e.printStackTrace();
 		}
-		model.addAttribute("presentYearObjectives", presentYear);
 
 		return "presentYearObjectives";
 	}
 
-	@RequestMapping(value = "/presentYearObjectivesAction", method = RequestMethod.POST)
-	public String presentYearObjectivesAction(
+	@RequestMapping(value = "/presentYearObjectivesAction", params = "nextAndSave", method = RequestMethod.POST)
+	public String presentYearObjectivesNextAndSave(
 			@ModelAttribute("presentYearObjectives") PresentYearObjectives presentYearObjectives, BindingResult br,
-			Model model) {
+			Model model, HttpSession session) {
 
-		log.info("present Year Objectives action");
+		presentYearObjectives(presentYearObjectives, model, session);
+
+		log.info("present year Next and save");
+
+		return "goalsForNextYear";
+	}
+
+	private void presentYearObjectives(PresentYearObjectives presentYearObjectives, Model model, HttpSession session) {
+
+		exemptEmpClock = (String) session.getAttribute("exemptEmp");
+		employeeYear = (String) session.getAttribute("year");
 
 		String currentYearfromUser = "";
 
 		// log.info(Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-		log.info(ExemptEmployeeController.getAnnaylYear());
 
-		presentYearObjectives.setEmpClockNumber(Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-		presentYearObjectives.setAnnaulYear(ExemptEmployeeController.getAnnaylYear());
+		presentYearObjectives.setEmpClockNumber(Integer.parseInt(exemptEmpClock.trim()));
+		presentYearObjectives.setAnnaulYear(employeeYear);
 
 		// fetching development goals the record..
-		List<PresentYearObjectives> presentYear = managerEmpService.retrievePresentYearObjectives();
+		PresentYearObjectives presentYear = managerEmpService.retrievePresentYearObjectives(exemptEmpClock.trim(),
+				employeeYear.trim());
 
-		if (presentYear.size() == 1) {
-			for (PresentYearObjectives year : presentYear) {
+		if (presentYear == null) {
 
-				currentYearfromUser = year.getAnnaulYear();
-
-			}
-
+			log.info("present year is null");
+			currentYearfromUser = "";
+		} else {
+			log.info("yes i am having record");
+			currentYearfromUser = presentYear.getAnnaulYear();
 		}
+
 		log.info("database year");
 		log.info(currentYearfromUser);
 		managerEmpService.savePresentYearObjectives(presentYearObjectives, currentYearfromUser);
 
 		model.addAttribute("devgoals", presentYear);
-
-		return "goalsForNextYear";
 	}
 
+	 /*
+	  * 
+	  * developmentGoalsScreen anchor screeen..
+	  * 
+	  * */
+
+	
+	
 	@RequestMapping(value = "/developmentGoalsScreen")
-	public String developmentGoalsScreen(Model model) {
+	public String developmentGoalsScreen(Model model, HttpSession session) {
 
 		log.info("present Year Objectives screen");
+		exemptEmpClock = (String) session.getAttribute("exemptEmp");
+		employeeYear = (String) session.getAttribute("year");
+		log.info(exemptEmpClock);
+
 		String currentYearfromUser = "";
-		List<PresentYearObjectives> presentYear = managerEmpService.retrievePresentYearObjectives();
+		PresentYearObjectives presentYear = managerEmpService.retrievePresentYearObjectives(exemptEmpClock.trim(),
+				employeeYear.trim());
 
-		if (presentYear.size() == 1) {
-
-			// success only one record
-
-		}
+	
 		model.addAttribute("devgoals", presentYear);
 
 		return "goalsForNextYear";
 	}
 
-	@RequestMapping(value = "/developmentGoals", method = RequestMethod.POST)
-	public String developmentGoalsAction(@ModelAttribute("devlopmentGoals") PresentYearObjectives devlopmentGoals,
-			BindingResult br, Model model) {
+	@RequestMapping(value = "/developmentGoals", params = "backAndSave", method = RequestMethod.POST)
+	public String developmentBacktAndSave(@ModelAttribute("devlopmentGoals") PresentYearObjectives devlopmentGoals,
+			BindingResult br, Model model, HttpSession session) {
 
-		log.info("present Year Objectives action");
+		log.info("Develpopment Goals for Next Year");
+		
+		String returnPage = developmentGoalsAction(devlopmentGoals, model, session);
+
+		 String presentYearObjectivesScreen=presentYearObjectivesScreen( model,  session);
+
+		return "presentYearObjectives";
+	}
+
+	@RequestMapping(value = "/developmentGoals", params = "nextAndSave", method = RequestMethod.POST)
+	public String developmentNextAndSave(@ModelAttribute("devlopmentGoals") PresentYearObjectives devlopmentGoals,
+			BindingResult br, Model model, HttpSession session) {
+
+		log.info("Develpopment Goals for Next Year");
+
+		String returnPage = developmentGoalsAction(devlopmentGoals, model, session);
+
+		return returnPage;
+	}
+
+	public String developmentGoalsAction(PresentYearObjectives devlopmentGoals, Model model, HttpSession session) {
+
+		exemptEmpClock = (String) session.getAttribute("exemptEmp");
+		employeeYear = (String) session.getAttribute("year");
+		log.info(exemptEmpClock);
 
 		String currentYearfromUser = "";
+		try {
 
-		// log.info(Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-		log.info(ExemptEmployeeController.getAnnaylYear());
+			devlopmentGoals.setEmpClockNumber(Integer.parseInt(exemptEmpClock.trim()));
+			devlopmentGoals.setAnnaulYear(employeeYear.trim());
 
-		devlopmentGoals.setEmpClockNumber(Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-		devlopmentGoals.setAnnaulYear(ExemptEmployeeController.getAnnaylYear());
+			// updating the record..
+			PresentYearObjectives presentYear = managerEmpService.retrievePresentYearObjectives(exemptEmpClock.trim(),
+					employeeYear.trim());
 
-		// updating the record..
-		List<PresentYearObjectives> presentYear = managerEmpService.retrievePresentYearObjectives();
+			if (presentYear == null) {
 
-		if (presentYear.size() == 1) {
-			for (PresentYearObjectives year : presentYear) {
+				String error = "<h6 style=color:red>please insert the objectives screes.</h6>";
 
-				currentYearfromUser = year.getAnnaulYear();
-
+				model.addAttribute("status", error);
+				log.info("if " + presentYear);
+				currentYearfromUser = "";
+				return "goalsForNextYear";
+			} else {
+				log.info("else");
+				currentYearfromUser = presentYear.getAnnaulYear();
 			}
 
+			model.addAttribute("presentYearObjectives", presentYear);
+			log.info("database year");
+			log.info(currentYearfromUser);
+			// managerEmpService.savePresentYearObjectives(presentYearObjectives,
+			// currentYearfromUser);
+
+			managerEmpService.updateDevelopmentGoals(devlopmentGoals, exemptEmpClock.trim(), currentYearfromUser);
+
+			model.addAttribute("meetingsummary", presentYear);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		model.addAttribute("presentYearObjectives", presentYear);
-		log.info("database year");
-		log.info(currentYearfromUser);
-		// managerEmpService.savePresentYearObjectives(presentYearObjectives,
-		// currentYearfromUser);
-
-		managerEmpService.updateDevelopmentGoals(devlopmentGoals);
-
-		model.addAttribute("meetingsummary", presentYear);
 
 		return "meetingsummary";
 	}
 
 	@RequestMapping(value = "/meetingsummaryscreen")
-	public String meetingSummary(Model model) {
+	public String meetingSummary(Model model, HttpSession session) {
 
-		List<PresentYearObjectives> presentYear = managerEmpService.retrievePresentYearObjectives();
+		log.info("metting screen");
+		exemptEmpClock = (String) session.getAttribute("exemptEmp");
+		employeeYear = (String) session.getAttribute("year");
+		log.info(exemptEmpClock);
+		PresentYearObjectives presentYear = managerEmpService.retrievePresentYearObjectives(exemptEmpClock.trim(),
+				employeeYear);
 
-		if (presentYear.size() == 1) {
-
-			// success
-
-		}
+	
 		model.addAttribute("meetingsummary", presentYear);
 
 		return "meetingsummary";
 	}
 
-	@RequestMapping(value = "/meetingsummary", method = RequestMethod.POST)
-	public String meetingSummary(@ModelAttribute("meetingsummary") PresentYearObjectives devlopmentGoals,
-			BindingResult br, Model model) {
+	@RequestMapping(value = "/meetingsummary", params = "backAndSave", method = RequestMethod.POST)
+	public String meetingSummaryBackAndNext(@ModelAttribute("meetingsummary") PresentYearObjectives devlopmentGoals,
+			BindingResult br, Model model, HttpSession session) {
 
-		log.info("present Year Objectives action");
+		String meetingResult = meetingSummaryAction(devlopmentGoals, model, session);
+		String developmentGoalsScreen = developmentGoalsScreen( model,  session);
+
+		return developmentGoalsScreen;
+	}
+
+	@RequestMapping(value = "/meetingsummary", params = "save", method = RequestMethod.POST)
+	public String meetingSummarySaveAndNext(@ModelAttribute("meetingsummary") PresentYearObjectives devlopmentGoals,
+			BindingResult br, Model model, HttpSession session) {
+
+		log.info("meetingSummarySaveAndNext");
+
+		String meetingResult = meetingSummaryAction(devlopmentGoals, model, session);
+
+		
+
+		return meetingResult;
+	}
+	
+	//completed
+
+	private String meetingSummaryAction(PresentYearObjectives devlopmentGoals, Model model, HttpSession session) {
+
+		exemptEmpClock = (String) session.getAttribute("exemptEmp");
+		employeeYear = (String) session.getAttribute("year");
+		log.info(exemptEmpClock);
 
 		String currentYearfromUser = "";
 
-		// log.info(Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-		log.info(ExemptEmployeeController.getAnnaylYear());
+		try {
+			
 
-		devlopmentGoals.setEmpClockNumber(Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-		devlopmentGoals.setAnnaulYear(ExemptEmployeeController.getAnnaylYear());
+			devlopmentGoals.setEmpClockNumber(Integer.parseInt(exemptEmpClock.trim()));
+			devlopmentGoals.setAnnaulYear(employeeYear.trim());
 
-		// updating the record..
-		List<PresentYearObjectives> presentYear = managerEmpService.retrievePresentYearObjectives();
+			// updating the record..
+			PresentYearObjectives presentYear = managerEmpService.retrievePresentYearObjectives(exemptEmpClock.trim(),
+					employeeYear.trim());
 
-		if (presentYear.size() == 1) {
-			for (PresentYearObjectives year : presentYear) {
-
-				currentYearfromUser = year.getAnnaulYear();
-
+			
+			if(presentYear==null){
+				
+			//	exemptTeamMemberService.updateCensusForm("SUBMITED TO MANAGER", exemptEmpClock.trim());
 			}
+			
+			model.addAttribute("presentYearObjectives", presentYear);
+			
+			log.info("database year");
+			log.info(currentYearfromUser);
+			
 
+			managerEmpService.updateMeetingSummary(devlopmentGoals);
+			
+			
+
+			model.addAttribute("meetingsummary", presentYear);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+			// meeting summary errors
+
+			return "meetingsummary";
 		}
-		model.addAttribute("presentYearObjectives", presentYear);
-		log.info("database year");
-		log.info(currentYearfromUser);
-		// managerEmpService.savePresentYearObjectives(presentYearObjectives,
-		// currentYearfromUser);
 
-		managerEmpService.updateDevelopmentGoals(devlopmentGoals);
+		//return "managerScreen"
+		return "acknowledgment";
 
-		model.addAttribute("meetingsummary", presentYear);
+	}
+	
+	
+	@RequestMapping(value = "/meetingsummary", params = "completed", method = RequestMethod.POST)
+	public String managerCompleted(@ModelAttribute("meetingsummary") PresentYearObjectives devlopmentGoals,
+			BindingResult br, Model model, HttpSession session) {
 
-		return "meetingsummary";
+		log.info("managercompleted");
+
+		exemptEmpClock = (String) session.getAttribute("exemptEmp");
+		employeeYear = (String) session.getAttribute("year");
+
+		PresentYearObjectives presentYear = managerEmpService.retrievePresentYearObjectives(exemptEmpClock.trim(),
+				employeeYear.trim());
+
+		
+	//	if(presentYear==null){
+			
+			exemptTeamMemberService.updateCensusForm("MANAGER COMPLETED", exemptEmpClock.trim());
+	//	}
+		
+		logoutController.backController(model, session);
+
+		return "managerScreen";
+	}
+
+	@RequestMapping(value = "/acknowledgmentScreen", method = RequestMethod.GET)
+	public String acknowledgmentSection(Model model, HttpSession session) {
+
+		return "acknowledgment";
 	}
 }

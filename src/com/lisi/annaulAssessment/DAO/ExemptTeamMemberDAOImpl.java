@@ -1,6 +1,7 @@
 package com.lisi.annaulAssessment.DAO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -32,49 +33,57 @@ public class ExemptTeamMemberDAOImpl implements ExemptTeamMemberDAO {
 
 		try {
 
-			if (String.valueOf(year).equals(Converters.getCurrentYear())) {
+			 if (String.valueOf(year).equals(Converters.getCurrentYear())) {
 
-				String statement1 = "update ExemptTeamMember set  section1A=?,section1B1=?,"
-						+ "effectivenessOfB1=?,section1B2=?,effectivenessOfB2=?,section1B3=?,effectivenessOfB3=?,"
-						+ "section1B4=?,effectivenessOfB4=?,section1C=? ,section1D1=? ,section1D2=?"
-						+ ",section1F1=? ,section1F2ONE=? ,section1F2TWO=? ,section1F3A=? ,section1F3B=?"
-						+ ",section1F3B1=? ,section1F3B2=? where empClockNumber=? and appraisalYear=?";
+	                System.out.println("update");
+	                String statement1 = "update ExemptTeamMember set  section1A=?,section1B1=?,"
+                           + "effectivenessOfB1=?,section1B2=?,effectivenessOfB2=?,section1B3=?,effectivenessOfB3=?,"
+                           + "section1B4=?,effectivenessOfB4=?,section1C=? ,section1D1=? ,section1D2=?"
+                           + ",section1F1=? ,section1F2ONE=? ,section1F2TWO=? ,section1F3A=? ,section1F3B=?"
+                           + ",section1F3B1=? ,section1F3B2=? ,other=? where empClockNumber=? and appraisalYear=?";
+                   
+                   Query query1 = sessionFactory.getCurrentSession().createQuery(statement1);
+                   System.out.println("Query :::: "+query1);
+                   
+                   
+                   System.out.println("other :: "+exemptTeamMember.getOther());
+                   
+                   query1.setString(0, exemptTeamMember.getSection1A().trim());
+                   query1.setString(1, exemptTeamMember.getSection1B1());
+                   query1.setString(2, exemptTeamMember.getEffectivenessOfB1());
+                   query1.setString(3, exemptTeamMember.getSection1B2());
+                   query1.setString(4,exemptTeamMember.getEffectivenessOfB2());
+                   query1.setString(5, exemptTeamMember.getSection1B3().trim());
+                   query1.setString(6, exemptTeamMember.getEffectivenessOfB3());
+                   query1.setString(7, exemptTeamMember.getSection1B4().trim());
+                   query1.setString(8, exemptTeamMember.getEffectivenessOfB4());
+                   query1.setString(9, exemptTeamMember.getSection1C().trim());
+                   query1.setString(10, exemptTeamMember.getSection1D1());
+                   query1.setString(11, exemptTeamMember.getSection1D2());
+                   query1.setString(12, exemptTeamMember.getSection1F1());
+                   query1.setString(13, exemptTeamMember.getSection1F2ONE());
+                   query1.setString(14, exemptTeamMember.getSection1F2TWO());
+                   
+                   query1.setString(15, exemptTeamMember.getSection1F3A());
+                   query1.setString(16, exemptTeamMember.getSection1F3B());
+                   query1.setString(17, exemptTeamMember.getSection1F3B1());
+                   query1.setString(18, exemptTeamMember.getSection1F3B2());
+                   query1.setString(19, exemptTeamMember.getOther());
+                   query1.setInteger(20,exemptTeamMember.getEmpClockNumber());
+                   query1.setString(21,exemptTeamMember.getAppraisalYear());
+                  
+                   
 
-				// '"+empClockNumber+"' and appraisalYear='"+appraisalYear+"'";
-
-				System.out.println("Enter if condition");
-
-				System.out.println("clock :: " + exemptTeamMember.getEmpClockNumber());
-				System.out.println("year :: " + exemptTeamMember.getAppraisalYear());
-				System.out.println("section B11 :: " + exemptTeamMember.getSection1B1());
-
-				Query query1 = sessionFactory.getCurrentSession().createQuery(statement1);
-				// query1.setInteger(0,exemptTeamMember.getEmpClockNumber());
-				query1.setString(0, exemptTeamMember.getSection1A());
-				query1.setString(1, exemptTeamMember.getSection1B1());
-				query1.setString(2, exemptTeamMember.getEffectivenessOfB1());
-				query1.setString(3, exemptTeamMember.getSection1B2());
-				query1.setString(4, exemptTeamMember.getEffectivenessOfB2());
-				query1.setString(5, exemptTeamMember.getSection1B3());
-				query1.setString(6, exemptTeamMember.getEffectivenessOfB3());
-				query1.setString(7, exemptTeamMember.getSection1B4());
-				query1.setString(8, exemptTeamMember.getEffectivenessOfB4());
-				query1.setString(9, exemptTeamMember.getSection1C());
-				query1.setString(10, exemptTeamMember.getSection1D1());
-				query1.setString(11, exemptTeamMember.getSection1D2());
-				query1.setString(12, exemptTeamMember.getSection1F1());
-				query1.setString(13, exemptTeamMember.getSection1F2ONE());
-				query1.setString(14, exemptTeamMember.getSection1F3A());
-				query1.setString(15, exemptTeamMember.getSection1F3B());
-				query1.setString(16, exemptTeamMember.getSection1F3B2());
-				query1.setString(17, exemptTeamMember.getSection1D2());
-				query1.setString(18, exemptTeamMember.getSection1D2());
-				query1.setInteger(19, exemptTeamMember.getEmpClockNumber());
-				query1.setString(20, exemptTeamMember.getAppraisalYear());
-
-				query1.executeUpdate();
-
-				return true;
+                   
+                   System.out.println("Section1F3A() :::"+exemptTeamMember.getSection1F3A());
+                   System.out.println("Section1F3B() :::"+exemptTeamMember.getSection1F3B());
+                   System.out.println("Section1F3B1() :::"+exemptTeamMember.getSection1F3B1());
+                   System.out.println("Section1F3B2() :::"+exemptTeamMember.getSection1F3B2());
+                   
+                   
+                   
+                   query1.executeUpdate();
+	                return true;
 
 			} else {
 
@@ -97,10 +106,11 @@ public class ExemptTeamMemberDAOImpl implements ExemptTeamMemberDAO {
 	@Override
 	public List<ExemptTeamMember> getReviewOfPastYearDetails(String clockNumber, String currentYear) {
 
-		Query hql_statement = null;
-		List<ExemptTeamMember> listExemptTeamMemberValues = null;
+		System.out.println("getReviewOfPastYearDetails");
+		Query hql_statement ;
+		List<ExemptTeamMember> listExemptTeamMemberValues = Collections.EMPTY_LIST;
 
-		int empClockNum = 0;
+		
 		try {
 			String statement = "from ExemptTeamMember where empClockNumber=? and appraisalYear=?";
 			System.out.println("statement :: " + statement);
@@ -115,6 +125,7 @@ public class ExemptTeamMemberDAOImpl implements ExemptTeamMemberDAO {
 		} catch (Exception exception) {
 			log.error("Error is getReviewOfPastYearDetails ::: " + exception.getMessage());
 			System.out.println("Error is getReviewOfPastYearDetails ::: " + exception.getMessage());
+			exception.printStackTrace();
 
 			// return empClockNum;
 		}
@@ -224,16 +235,19 @@ public class ExemptTeamMemberDAOImpl implements ExemptTeamMemberDAO {
 	}
 
 	@Override
-	public int updateCensusForm(String status) {
+	public int updateCensusForm(String status,String clock) {
 		Date todayDate = new Date();
+		
+		System.out.println("updatd the employee status..");
 		String updateStatement = "update CensusForm set status=? , completedDate=? where empClockNumber=? and annaulYear=?";
 
 		Query query = sessionFactory.getCurrentSession().createQuery(updateStatement);
 		query.setString(0, status);
 		query.setString(1, todayDate.toString());
-		query.setInteger(2, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
+		query.setInteger(2, Integer.parseInt(clock.trim()));
 		query.setString(3, Converters.getCurrentYear());
-		return 0;
+		
+		return query.executeUpdate();
 	}
 
 }

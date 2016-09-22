@@ -2,6 +2,8 @@ package com.lisi.annaulAssessment.service;
 
 import java.util.List;
 
+import javax.persistence.metamodel.ManagedType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,15 +27,24 @@ public class ManagerEmployeeServiceImpl implements ManagerEmployeeService {
 	}
 
 	@Override
-	public List<PresentYearObjectives> retrievePresentYearObjectives() {
+	public PresentYearObjectives retrievePresentYearObjectives(String clockNumber,String year) {
 		// TODO Auto-generated method stub
-		return managerEmployeedao.retrievePresentYearObjectives();
+		return managerEmployeedao.retrievePresentYearObjectives(clockNumber,year);
 	}
 
 	@Override
-	public void updateDevelopmentGoals(PresentYearObjectives developmentGoals) {
-	managerEmployeedao.updateDevelopmentGoals(developmentGoals);
+	public void updateDevelopmentGoals(PresentYearObjectives developmentGoals,String clock,String year) {
+	managerEmployeedao.updateDevelopmentGoals(developmentGoals, clock, year);
 		
 	}
+
+	@Override
+	public void updateMeetingSummary(PresentYearObjectives meetingsummary) {
+		
+		managerEmployeedao.updateMeetingSummary(meetingsummary); 
+		
+	}
+	
+	
 
 }

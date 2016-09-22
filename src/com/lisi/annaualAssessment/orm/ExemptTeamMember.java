@@ -82,6 +82,20 @@ public class ExemptTeamMember implements Serializable{
 	@Column(name="AppraisalYear")
 	private String appraisalYear;
 
+	@Column(name="Other")
+	private String other;
+	
+	
+	
+	
+	public String getOther() {
+		return other;
+	}
+
+	public void setOther(String other) {
+		this.other = other;
+	}
+
 	/**
 	 * @return the empClockNumber
 	 */

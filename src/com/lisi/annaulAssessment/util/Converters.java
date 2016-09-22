@@ -7,6 +7,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 public class Converters {
 
 	public static Date getParsedDate(String dateStr) throws ParseException {
@@ -22,7 +25,7 @@ public class Converters {
 		return date;
 
 	}
-	//Mon Sep 12 22:41:35 IST 2016
+	// Mon Sep 12 22:41:35 IST 2016
 
 	public static String getCurrentYear() {
 
@@ -36,7 +39,7 @@ public class Converters {
 	public static Date getNonExemptDate(String dateStr) throws ParseException {
 
 		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		
+
 		System.out.println("enter into parse()..");
 		Date date = (Date) formatter.parse(dateStr);
 		System.out.println("ending parse()...");
@@ -51,61 +54,89 @@ public class Converters {
 	}
 
 	public static String differenceDays(String statusDate) throws ParseException {
-				
-	//	Date today=new Date();
-		int diffDays=0;
-		String diffDay="";
+
+		//Added
+				 String dateStart = statusDate;
+				 int s=0;
+		         String dateStop = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy").format(new Date());
+				    SimpleDateFormat formate = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+				    Date d1 = null;
+				    Date d2 = null;
+				    try {
+				        d1 = formate.parse(dateStart);
+				        d2 = formate.parse(dateStop);
+				        DateTime dt1 = new DateTime(d1);
+				        DateTime dt2 = new DateTime(d2);
+
+				        System.out.print(Days.daysBetween(dt1, dt2).getDays() + " days, ");
+				       
+				        	 s = Days.daysBetween(dt1, dt2).getDays();
+				        
+				     } catch (Exception e) {
+				        e.printStackTrace();
+				     }
+			
+				/*//New added end
+				// Date today=new Date();
+				int diffDays = 0;
+				String diffDay = "";
+
+				DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+				Date date = (Date) formatter.parse(statusDate);
+				// System.out.println(date);
+
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				String formatedDate = (cal.get(Calendar.MONTH) + 1) + "/" + (cal.get(Calendar.DATE)) + "/"
+						+ cal.get(Calendar.YEAR);
+				// System.out.println("formatedDate : " + formatedDate);
+				                  
+				Date today; // your date
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				int year = calendar.get(Calendar.YEAR);
+				int month = calendar.get(Calendar.MONTH);
+				int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+				String todayDateee = (month) + "/" + (day) + "/" + (year);
+
+				try {
+					// System.out.println(statusDate + " con"); //Mon Sep 12 22:41:35
+					// IST 2016
+					String date1 = formatedDate;
+					// String time1 = "11:00 AM";
+					String date2 = todayDateee;
+					// String time2 = "12:15 AM";
+
+					String format1 = "MM/dd/yyyy hh:mm a";
+					String format = "MM/dd/yyyy";
+
+					SimpleDateFormat sdf = new SimpleDateFormat(format);
+					SimpleDateFormat sdf1 = new SimpleDateFormat(format1);
+
+					Date dateObj1 = sdf.parse(date1);
+					Date dateObj2 = sdf.parse(date2);
+					// System.out.println(dateObj1);
+					// System.out.println(dateObj2 + "\n");
+
+					long diff = dateObj1.getTime() - dateObj2.getTime();
+
+					diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+
+					diffDay = String.valueOf(diffDays);
+					// System.out.println("difference between days: " + diffDays);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return diffDay;*/
 		
-		 DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-		 Date date = (Date)formatter.parse(statusDate);
-//		 System.out.println(date);        
-
-		 Calendar cal = Calendar.getInstance();
-		 cal.setTime(date);
-		 String formatedDate = (cal.get(Calendar.MONTH) + 1) + "/" + (cal.get(Calendar.DATE) ) + "/" +  cal.get(Calendar.YEAR);
-//		 System.out.println("formatedDate : " + formatedDate); 
-		/*                  */
-		 Date today; // your date
-		    Calendar calendar = Calendar.getInstance();
-		    calendar.setTime(date);
-		    int year = calendar.get(Calendar.YEAR);
-		    int month = calendar.get(Calendar.MONTH);
-		    int day = calendar.get(Calendar.DAY_OF_MONTH);
 		
-		    String todayDateee = (month ) + "/" + (day ) + "/" +  (year);
-		
-		try {
-//			System.out.println(statusDate + " con"); //Mon Sep 12 22:41:35 IST 2016
-			String date1 = formatedDate;
-		//	String time1 = "11:00 AM";
-			String date2 = todayDateee;
-		//	String time2 = "12:15 AM";
-
-			String format1 = "MM/dd/yyyy hh:mm a";
-			String format = "MM/dd/yyyy";
-
-			SimpleDateFormat sdf = new SimpleDateFormat(format);
-			SimpleDateFormat sdf1 = new SimpleDateFormat(format1);
-
-			Date dateObj1 = sdf.parse(date1);
-			Date dateObj2 = sdf.parse(date2);
-	//		System.out.println(dateObj1);
-	//		System.out.println(dateObj2 + "\n");
-
-			long diff = dateObj1.getTime() - dateObj2.getTime();
-
-			 diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-			 
-			  diffDay=String.valueOf(diffDays);
-	//		System.out.println("difference between days: " + diffDays);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return diffDay;
+				 
+					return String.valueOf(s);
 	}
 
 	// encript decript
-	
+
 	public static String encrypt(String clockId) {
 
 		String data = "" + clockId;
@@ -113,7 +144,7 @@ public class Converters {
 
 		for (int i = 0; i < data.length(); i++) {
 			char c = data.charAt(i);
-			if (c==('1')) {
+			if (c == ('1')) {
 				hashingValue = hashingValue + "^";
 			} else if (c == '2') {
 				hashingValue = hashingValue + "c";
@@ -137,13 +168,12 @@ public class Converters {
 				hashingValue = hashingValue + "d";
 			}
 		}
-		
 
 		return hashingValue;
 	}
 
 	public static String decrypt(String originl) {
-		
+
 		String originalValue = "";
 		String encrypt = originl;
 		for (int i = 0; i < encrypt.length(); i++) {
@@ -172,11 +202,49 @@ public class Converters {
 				originalValue = originalValue + ".";
 			}
 		}
-		
 
 		return originalValue;
 	}
-	
-	
-	
+
+	public static String getDateInString(Date date) throws ParseException {
+
+		System.out.println("date conversion in java class");
+		DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S");
+		Date validDate = inputFormat.parse(date.toString());
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(validDate);
+		String formatedDate = (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DATE) + "/"
+				+ cal.get(Calendar.YEAR);
+
+		return formatedDate;
+
+	}
+
+	public static String stringFormatDate(String sDate) throws ParseException {
+		DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+		Date date = (Date) formatter.parse(sDate);
+		// System.out.println(date);
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		String formatedDate = (cal.get(Calendar.MONTH) + 1) + "/" + (cal.get(Calendar.DATE)) + "/"
+				+ cal.get(Calendar.YEAR);
+		// System.out.println("formatedDate : " + formatedDate);
+		/*                  */
+		Date today; // your date
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+		String todayDateee = (month) + "/" + (day) + "/" + (year);
+
+		System.out.println("updated date");
+		System.out.println(todayDateee);
+		
+		return formatedDate;
+	}
+
 }

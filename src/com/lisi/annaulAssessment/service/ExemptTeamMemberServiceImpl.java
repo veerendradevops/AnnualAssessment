@@ -42,9 +42,9 @@ public class ExemptTeamMemberServiceImpl implements ExemptTeamMemberService{
 	}
 
 	@Override
-	public int updateCensusForm(String status) {
+	public int updateCensusForm(String status,String empClock) {
 		// TODO Auto-generated method stub
-		return exemptTeamMemberDAO.updateCensusForm(status);
+		return exemptTeamMemberDAO.updateCensusForm(status,empClock);
 	}
 
 

@@ -32,25 +32,30 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CensusForm> getEmployeeInformation() {
+	public List<CensusForm> getEmployeeInformation(String loginEmpClock) {
 
-		query = session.getCurrentSession().createQuery("from CensusForm where exemptOrNonExempt=? and supervisorClockNumber=?");
+		System.out.println("getEmployeeInformation");
+
+		query = session.getCurrentSession()
+				.createQuery("from CensusForm where exemptOrNonExempt=? and supervisorClockNumber=?");
 
 		query.setParameter(0, "non-Exempt");
-		query.setString(1, NonExemptEmployeesController.getLoginEmpClock().trim());
+
+		query.setParameter(1, Integer.parseInt(loginEmpClock));
 
 		return (List<CensusForm>) query.list();
 
 	}
 
 	@Override
-	public List<CensusForm> getNonExemptEmployeeList(String clockNumber) {
+	public List<CensusForm> getNonExemptEmployeeList(String clockNumber, String year) {
 
-		String statement = "from CensusForm where empClockNumber=?";
+		String statement = "from CensusForm where empClockNumber=? and annaulYear=?";
 
 		query = session.getCurrentSession().createQuery(statement);
 
 		query.setInteger(0, Integer.parseInt(clockNumber.trim()));
+		query.setString(1, year.trim());
 
 		return (List<CensusForm>) query.list();
 
@@ -60,38 +65,12 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 	public void addJobKnowledgeAndSkillsData(JobKnowledgeAndSkill jobKnowledgeAndSkill, String existingYeaR) {
 		try {
 
-			/*
-			 * int year = 0;
-			 * 
-			 * String hqlQuery =
-			 * "from JobKnowledgeAndSkill where clockId=? and annualPerformance=? "
-			 * ;
-			 * 
-			 * 
-			 * Session currentSession = session.openSession();
-			 * currentSession.beginTransaction();
-			 * 
-			 * 
-			 * query = session.getCurrentSession().createQuery(hqlQuery);
-			 * 
-			 * query.setInteger(0,
-			 * Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()
-			 * ));
-			 * 
-			 * query.setInteger(1,
-			 * Integer.parseInt(NonExemptEmployeesController.getAnnaulYear()));
-			 * 
-			 * List<JobKnowledgeAndSkill> checkYear = query.list(); for
-			 * (JobKnowledgeAndSkill jks : checkYear) {
-			 * 
-			 * year = Integer.parseInt(jks.getAnnualPerformance()); }
-			 */
 			if (String.valueOf(Converters.getCurrentYear()).equals(existingYeaR)) {
 
 				String statement = "update JobKnowledgeAndSkill set safetyScore=?,safetySupervisorsComments=?,qualityScore=?,"
 						+ "qualitySupervisorsComments=?,productivityScore=?,productivitySupervisorsComments=?,"
 						+ "jobKnowledgeAndSkillsScore=?,jobKnowledgeAndSkillsSupervisorsComments=?,"
-						+ "supervisorsOverallComments=?,avgScore=? where clockId=? and annualYear=?";
+						+ "supervisorsOverallComments=?,avgScore=?,summaryAvgScore=? where clockId=? and annualYear=?";
 				Query query = session.getCurrentSession().createQuery(statement);
 
 				query.setParameter(0, jobKnowledgeAndSkill.getSafetyScore());
@@ -104,8 +83,9 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 				query.setParameter(7, jobKnowledgeAndSkill.getJobKnowledgeAndSkillsSupervisorsComments());
 				query.setParameter(8, jobKnowledgeAndSkill.getSupervisorsOverallComments());
 				query.setParameter(9, jobKnowledgeAndSkill.getAvgScore());
-				query.setParameter(10, jobKnowledgeAndSkill.getClockId());
-				query.setParameter(11, jobKnowledgeAndSkill.getAnnualYear());
+				query.setParameter(10, jobKnowledgeAndSkill.getSummaryAvgScore());
+				query.setParameter(11, jobKnowledgeAndSkill.getClockId());
+				query.setParameter(12, jobKnowledgeAndSkill.getAnnualYear());
 				query.executeUpdate();
 
 			} else {
@@ -121,14 +101,14 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 	}
 
 	@Override
-	public List<JobKnowledgeAndSkill> getJobKnowledgeList(String clockId) {
+	public List<JobKnowledgeAndSkill> getJobKnowledgeList(String clockId, String empYear) {
 		String hqlQuery = "from JobKnowledgeAndSkill where clockId=? and annualYear=?";
 
 		query = session.getCurrentSession().createQuery(hqlQuery);
 
 		query.setInteger(0, Integer.parseInt(clockId));
 
-		query.setInteger(1, Integer.parseInt(NonExemptEmployeesController.getAnnaulYear()));
+		query.setInteger(1, Integer.parseInt(empYear.trim()));
 
 		return (List<JobKnowledgeAndSkill>) query.list();
 	}
@@ -139,28 +119,7 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 		// InterpersonalSkillsBean ipsb=new InterpersonalSkillsBean();
 
 		try {
-			/*
-			 * int year = 0;
-			 * 
-			 * String hqlQuery =
-			 * "from InterpersonalSkills where clockId=? and annualYear=?";
-			 * 
-			 * query = session.getCurrentSession().createQuery(hqlQuery);
-			 * 
-			 * query.setInteger(0,
-			 * Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()
-			 * ));
-			 * 
-			 * query.setInteger(1,
-			 * Integer.parseInt(NonExemptEmployeesController.getAnnaulYear()));
-			 * 
-			 * List<InterpersonalSkills> checkYear = query.list(); for
-			 * (InterpersonalSkills ips : checkYear) {
-			 * 
-			 * year = Integer.parseInt(ips.getAnnualYear());
-			 * 
-			 * }
-			 */
+
 			if (String.valueOf(Converters.getCurrentYear()).equals(existingYeaR)) {
 				log.info("this save or update method");
 
@@ -199,13 +158,13 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 	}
 
 	@Override
-	public List<InterpersonalSkills> getInterpersonalList(String clockId) {
+	public List<InterpersonalSkills> getInterpersonalList(String clockId, String year) {
 		String hqlQuery = "from InterpersonalSkills where clockId=? and annualYear=?";
 
 		query = session.getCurrentSession().createQuery(hqlQuery);
 
 		query.setInteger(0, Integer.parseInt(clockId));
-		query.setInteger(1, Integer.parseInt(NonExemptEmployeesController.getAnnaulYear()));
+		query.setInteger(1, Integer.parseInt(year.trim()));
 
 		return (List<InterpersonalSkills>) query.list();
 	}
@@ -275,38 +234,18 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 	@Override
 	public void addNonExemptTrainingorDevelopmenData(TrainingAndDevelopment trainingAndDevelopement,
 			String existingYeaR) {
-		try {
-			/*
-			 * log.info("addNonExemptTrainingorDevelopmenData");
-			 * log.info(trainingAndDevelopement.getFirstAreaorFocus());
-			 * log.info(trainingAndDevelopement.getfirstTrainingDescription());
-			 * log.info(trainingAndDevelopement.getThirdTrainingDescription());
-			 * 
-			 * session.getCurrentSession().save(trainingAndDevelopement);
-			 * 
-			 * int year = 0;
-			 * 
-			 * String hqlQuery =
-			 * "from TrainingAndDevelopment where clockId=? and annualYear=? ";
-			 * 
-			 * query = session.getCurrentSession().createQuery(hqlQuery);
-			 * 
-			 * query.setInteger(0,
-			 * Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()
-			 * ));
-			 * 
-			 * query.setInteger(1,Integer.parseInt(NonExemptEmployeesController.
-			 * getAnnaulYear()));
-			 * 
-			 * List<TrainingAndDevelopment> checkYear = query.list();
-			 * 
-			 * for (TrainingAndDevelopment tad : checkYear) {
-			 * 
-			 * year = Integer.parseInt(tad.getAnnualYear()); }
-			 */
-			if (String.valueOf(existingYeaR).equals(Converters.getCurrentYear())) {
 
-				String statement = "update TrainingAndDevelopment set firstAreaorFocus=?,firstTrainingDescription=?,firstTrainingTopic,firstDateDue=?,secondAreaorFocus=?,secondTrainingTopic=?,secondTrainingDescription=?,secondfDateDue=?,thirdAreaorFocus=?,thirdTrainingTopic=?,thirdTrainingDescription=?,thirdDateDue=? where clockId=? and annualYear=?";
+		try {
+			log.info("the year is" + existingYeaR);
+
+			if (String.valueOf(existingYeaR).equals(String.valueOf(Converters.getCurrentYear()))) {
+
+				System.out.println("cursor enter into the update query");
+
+				String statement = "update TrainingAndDevelopment set firstAreaorFocus=?,firstTrainingDescription=?,"
+						+ "firstTrainingTopic=?,firstDateDue=?,secondAreaorFocus=?,secondTrainingTopic=?,"
+						+ "secondTrainingDescription=?,secondfDateDue=?,thirdAreaorFocus=?,thirdTrainingTopic=?,"
+						+ "thirdTrainingDescription=?,thirdDateDue=? where clockId=? and annualYear=?";
 
 				Query query = session.getCurrentSession().createQuery(statement);
 
@@ -325,9 +264,13 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 				query.setParameter(12, trainingAndDevelopement.getClockId());
 				query.setParameter(13, trainingAndDevelopement.getAnnualYear());
 				query.executeUpdate();
+				log.info("your dat successfully updated..");
 
 			} else {
+
 				session.getCurrentSession().save(trainingAndDevelopement);
+
+				log.info("your TrainingAndDevelopment data successfully saved");
 			}
 		}
 
@@ -353,11 +296,7 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 	 * (List<TrainingAndDevelopment>) query.list(); }
 	 */
 	@Override
-	public List<TrainingAndDevelopment> getTrainingAndDevelopmentData(String empClockNumber) {
-
-		log.info("this is retreve method");
-		System.out.println(empClockNumber);
-		System.out.println(NonExemptEmployeesController.getAnnaulYear());
+	public List<TrainingAndDevelopment> getTrainingAndDevelopmentData(String empClockNumber, String year) {
 
 		String hqlQuery = "from TrainingAndDevelopment where clockId=? and annualYear=?";
 
@@ -365,19 +304,14 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 
 		query.setInteger(0, Integer.parseInt(empClockNumber));
 
-		query.setInteger(1, Integer.parseInt(NonExemptEmployeesController.getAnnaulYear()));
-
-		List<Object[]> obj = query.list();
+		query.setInteger(1, Integer.parseInt(year.trim()));
 
 		/*
-		 * for (Object[] object : obj) {
+		 * List<TrainingAndDevelopment> obj=query.list();
 		 * 
-		 * System.out.println(object[0]); //year = String.valueOf(object[0]); }
+		 * for(TrainingAndDevelopment training : obj){ log.info("for");
+		 * log.info(training.getAnnualYear()); }
 		 */
-
-		System.out.println(obj.contains("TrainingAndDevelopment"));
-
-		log.info("this is end retreve method");
 
 		return (List<TrainingAndDevelopment>) query.list();
 
@@ -385,55 +319,64 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 
 	@Override
 	public void addNonExemptAcknowledgmentSectionData(AcknowledgmentSection acknowledgmentSection) {
-		/*
-		 * try {
-		 * 
-		 * int year = 0;
-		 * 
-		 * String hqlQuery =
-		 * "from AcknowledgmentSection where clockId=? and annualYear=? ";
-		 * 
-		 * query = session.getCurrentSession().createQuery(hqlQuery);
-		 * 
-		 * query.setInteger(0, 1111
-		 * Integer.parseInt(NonExemptEmployeesController. getEmpClockNumber())
-		 * );
-		 * 
-		 * query.setInteger(1, Converters.getDate());
-		 * 
-		 * List<AcknowledgmentSection> checkYear = query.list();
-		 * 
-		 * for (AcknowledgmentSection aks : checkYear) {
-		 * 
-		 * year = Integer.parseInt(aks.getAnnualYear()); } if (year ==
-		 * Converters.getDate()) {
-		 * 
-		 * session.getCurrentSession().saveOrUpdate(acknowledgmentSection); }
-		 * else { session.getCurrentSession().save(acknowledgmentSection); } }
-		 * 
-		 * catch (Exception e) {
-		 * 
-		 * e.printStackTrace(); }
-		 * 
-		 */}
+		try {
+
+			int year = 0;
+
+			String hqlQuery = "from AcknowledgmentSection where clockId=? and annualYear=? ";
+
+			query = session.getCurrentSession().createQuery(hqlQuery);
+
+			query.setInteger(0,
+					1111/*
+						 * Integer.parseInt(NonExemptEmployeesController.
+						 * getEmpClockNumber())
+						 */);
+
+			query.setInteger(1, Integer.parseInt(Converters.getCurrentYear()));
+
+			List<AcknowledgmentSection> checkYear = query.list();
+
+			for (AcknowledgmentSection aks : checkYear) {
+
+				year = Integer.parseInt(aks.getAnnualYear());
+			}
+			if (year == Integer.parseInt(Converters.getCurrentYear())) {
+
+				session.getCurrentSession().saveOrUpdate(acknowledgmentSection);
+			} else {
+				session.getCurrentSession().save(acknowledgmentSection);
+			}
+		}
+
+		catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+	}
 
 	@Override
-	public List<AcknowledgmentSection> getAcknowledgementData(String empClockNumber) {
-		String hqlQuery = "from AcknowledgmentSection where clockId=? and annualPerformance=?";
+	public List<AcknowledgmentSection> getAcknowledgementData(String empClockNumber, String year) {
+		String hqlQuery = "from AcknowledgmentSection where clockId=? and annualPerformance=? and annualYear=?";
 
 		query = session.getCurrentSession().createQuery(hqlQuery);
 
 		query.setInteger(0, Integer.parseInt(empClockNumber));
 
-		query.setInteger(1, Integer.parseInt(NonExemptEmployeesController.getAnnaulYear()));
+		query.setString(1, year.trim());
+
 		return (List<AcknowledgmentSection>) query.list();
 	}
 
-	@Override
-	public void addNonExemptTrainingorDevelopmenData(TrainingAndDevelopment trainingAndDevelopement) {
-		session.getCurrentSession().saveOrUpdate(trainingAndDevelopement);
-
-	}
+	/*
+	 * @Override public void
+	 * addNonExemptTrainingorDevelopmenData(TrainingAndDevelopment
+	 * trainingAndDevelopement) {
+	 * session.getCurrentSession().saveOrUpdate(trainingAndDevelopement);
+	 * 
+	 * }
+	 */
 
 	/*
 	 * // delete operations
@@ -472,48 +415,36 @@ public class NonExemptEmployeeDaoImpl implements NonExemptEmployeeDao {
 	}
 
 	@Override
-	public String getYear(String ormClass) {
+	public String getYear(String ormClass, String clock, String empYear) {
 		String year = "";
 
 		String hqlQuery = "select annualYear from " + ormClass + " where clockId=? and annualYear=?";
 
-		/*
-		 * year=(String) session.getCurrentSession().createQuery(hqlQuery).
-		 * setParameter(0,
-		 * Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()))
-		 * .setParameter(1,
-		 * Integer.parseInt(NonExemptEmployeesController.getAnnaulYear())).
-		 * uniqueResult();
-		 */
-		/* Query query = */
 		year = (String) session.getCurrentSession().createQuery(hqlQuery)
-				.setParameter(0, Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()))
-				.setParameter(1, NonExemptEmployeesController.getAnnaulYear()).uniqueResult();
+				.setParameter(0, Integer.parseInt(clock.trim())).setParameter(1, empYear.trim()).uniqueResult();
 
-		/*
-		 * query.setInteger(0,
-		 * Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()));
-		 * 
-		 * query.setString(1, NonExemptEmployeesController.getAnnaulYear());
-		 * 
-		 * @SuppressWarnings("unchecked") List<Object[]> obj = query.list();
-		 * 
-		 * for (Object[] object : obj) {
-		 * 
-		 * System.out.println(object[0]); year = String.valueOf(object[0]); }
-		 */
-
-		/*
-		 * List<JobKnowledgeAndSkill> checkYear = query.list(); for
-		 * (JobKnowledgeAndSkill ips : checkYear) {
-		 * 
-		 * year = ips.getAnnualYear();
-		 * 
-		 * }
-		 */
-		System.out.println("employee year");
-		System.out.println("year form an employee  " + year);
 		return year;
 	}
 
-}
+	@Override
+	public String getInterpersonalAvgScore(String nonexemptEmpClock,String employeeYear) {
+		String statement = "from InterpersonalSkills where Clockid=? and annualYear=?";
+		query = session.getCurrentSession().createQuery(statement);
+
+		query.setInteger(0, Integer.parseInt(nonexemptEmpClock));
+
+		query.setInteger(1, Integer.parseInt(employeeYear.trim()));
+
+		InterpersonalSkills interpersonalSkills = (InterpersonalSkills) query.uniqueResult();
+
+		if (interpersonalSkills == null) {
+
+			return "";
+		}
+
+		return String.valueOf(interpersonalSkills.getAvgScore().trim());
+	}
+
+	}
+
+

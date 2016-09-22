@@ -15,40 +15,34 @@ import com.lisi.annaulAssessment.controller.ExemptEmployeeController;
 @Repository("tMPersonalInformationDAO")
 public class TMPersonalInformationDAOImpl implements TMPersonalInformationDAO {
 
-	private static final Logger log=Logger.getLogger(TMPersonalInformationDAOImpl.class);
-			
-			
-	
+	private static final Logger log = Logger.getLogger(TMPersonalInformationDAOImpl.class);
+
 	private Query query = null;
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
-	
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CensusForm> getEmployeeDetails(String empClockNumber) {
+	public List<CensusForm> getEmployeeDetails(String empClockNumber, String currentYear) {
 
 		try {
 
-		log.info("particular clock number " + empClockNumber);
+			log.info("particular clock number " + empClockNumber);
 
-			String statement = "from CensusForm where empClockNumber=?";
+			String statement = "from CensusForm where empClockNumber=? and annaulYear=?";
 
 			query = sessionFactory.getCurrentSession().createQuery(statement);
-			
-			query.setInteger(0, Integer.parseInt(empClockNumber.trim()));
-			
-			/*List<CensusForm> censusData=query.list();
 
-			log.info(censusData);*/
-			
+			query.setInteger(0, Integer.parseInt(empClockNumber.trim()));
+			query.setString(1, currentYear.trim());
+
 			return (List<CensusForm>) query.list();
 		}
 
 		catch (Exception exception) {
 			System.out.println(exception.getMessage());
+			exception.printStackTrace();
 
 		}
 		return (List<CensusForm>) query.list();

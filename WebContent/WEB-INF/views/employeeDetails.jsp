@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page import="com.lisi.annaulAssessment.util.Converters" %>
+<%@ page import="com.lisi.annaulAssessment.util.Converters"%>
 <html>
 <body class="fixed-left">
 
@@ -148,31 +148,68 @@
 												<c:if test="${!empty empDetails}">
 													<c:forEach var="empDetail" items="${empDetails}">
 														<tr>
-															<td><a href="#" style="margin-left: 9px;"><c:out
-																		value="${ empDetail.emplastName}"></c:out>
-																		<c:out
+														<!-- PREVIOUS CODE
+														
+														<td><a href="#" style="margin-left: 9px;"><c:out
+																		value="${ empDetail.emplastName}"></c:out> <c:out
+																		value=", "></c:out> <c:out
+																		value="${ empDetail.empfirstName}"></c:out></a></td>
+														 -->
+															<td><a href="/AnnaulAssessmenT/teamMemberPersonalInfo.do?clockNum=${empDetail.empClockNumber}&year=${empDetail.annaulYear}" style="margin-left: 9px;"><c:out
+																		value="${ empDetail.emplastName}"></c:out> <c:out
+																		value=", "></c:out> <c:out
 																		value="${ empDetail.empfirstName}"></c:out></a></td>
 															<td>&nbsp;</td>
+
+															<c:set var="exemptOrNonExempt"
+																value="${ empDetail.exemptOrNonExempt}" scope="request"></c:set>
+															<c:set var="clockId" value="${ empDetail.empClockNumber}"
+																scope="request" />
+
+															<%
+															System.out.println("#######################################################################");
+																String clockid;
+																		String hashingValue;
+																		String exemptOrNonExempt = (String) request.getAttribute("exemptOrNonExempt");
+
+																		if (exemptOrNonExempt.equalsIgnoreCase("exempt")) {
+															%>
 
 															<td><a
 																href="/AnnaulAssessmenT/teamMemberPersonalInfo.do?clockNum=${empDetail.empClockNumber}&year=${empDetail.annaulYear}"><c:out
 																		value="${empDetail.empClockNumber}"></c:out></a></td>
-															<%!String empStatusDate;  %>
-															
-															<c:set var="employeeStatus" value="${empDetail.status}" scope="request"/>
-															<c:set var="completedDate" value="${empDetail.completedDate}" scope="request"/>
+
+															<%
+																} else {
+																			Integer clocknum = (Integer) request.getAttribute("clockId");
+
+																			hashingValue = Converters.encrypt(String.valueOf(clocknum));
+																			application.setAttribute("hashing", hashingValue);
+															%>
+															<td><a
+																href="/AnnaulAssessmenT/teamMemberPersonalInformation.do?clockNum=${hashing}&annualYear=${empDetail.annaulYear}"><c:out
+																		value="${empDetail.empClockNumber}"></c:out></a></td>
+															<%
+																}
+															%>
+
+															<%!String empStatusDate;%>
+
+															<c:set var="employeeStatus" value="${empDetail.status}"
+																scope="request" />
+															<c:set var="completedDate"
+																value="${empDetail.completedDate}" scope="request" />
 															<%
 																/*     bussiness logic for days difference... */
-																
-																 empStatusDate=(String)request.getAttribute("completedDate");
-																
-																	//	System.out.println(empStatusDate);
-																		String diffDays=Converters.differenceDays(empStatusDate);
-																		
+
+																		empStatusDate = (String) request.getAttribute("completedDate");
+
+																		//	System.out.println(empStatusDate);
+																		String diffDays = Converters.differenceDays(empStatusDate);
 															%>
 															<td><c:out value="${empDetail.status}"></c:out></td>
 															<td><c:out value="${empDetail.completedDate}"></c:out></td>
-															<td><%= diffDays  %></td>
+															<td><%=diffDays%></td>
 															<td bgcolor="ffeb9c">${empDetail.currentHrlyRate}</td>
 															<td bgcolor="ffeb9c">${empDetail.annaulRate}</td>
 															<td bgcolor="b8cce4">0.00%</td>
@@ -183,8 +220,21 @@
 															<td bgcolor="c6efce">${empDetail.annaulRate}</td>
 														</tr>
 													</c:forEach>
+													
 												</c:if>
-
+<tr>
+														<td>TOTAL</td>
+														<td><a href="#">${numberofemployees }</a></td>
+														<td>&nbsp;</td>
+														<td></td>
+														<td>&nbsp;</td>
+														<td></td>
+														<td bgcolor="ffeb9c">${yellowHourlyRate}</td>
+														<td bgcolor="ffeb9c">${yellowAnnaulRate }</td>
+														<td bgcolor="c0504d">0.00%</td>
+														<td bgcolor="c6efce">${yellowHourlyRate}</td>
+														<td bgcolor="c6efce">${yellowAnnaulRate }</td>
+													</tr>
 											</tbody>
 										</table>
 									</form>

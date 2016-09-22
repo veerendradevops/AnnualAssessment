@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lisi.annaualAssessment.orm.CensusForm;
 import com.lisi.annaulAssessment.DAO.EmployeeDAO;
+import com.lisi.annaulAssessment.pojo.CensusFormPojo;
 
 
 /**
@@ -28,11 +29,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeDAO dao;
 
 	@Override
-	public List<CensusForm> getExemptEmployees(int clockNumber) {
+	public List<CensusForm> getExemptEmployees(int clockNumber,String empStatus,String currentYear) {
 
 	
 
-		return dao.getExemptEmployees(clockNumber);
+		return dao.getExemptEmployees(clockNumber,empStatus,currentYear);
 	}
 
 	@Override
@@ -42,15 +43,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public int getEmployeeClockNumbers(String empName) {
+	public int getEmployeeClockNumbers(String empName,String currentYear) {
 		// TODO Auto-generated method stub
-		return dao.getEmployeeClockNumbers(empName);
+		return dao.getEmployeeClockNumbers(empName,currentYear);
 	}
 
 	@Override
-	public List<CensusForm> getEmployeeRole() {
+	public List<CensusForm> getEmployeeRole(String currentYear) {
 		// TODO Auto-generated method stub
-		return dao.getEmployeeRole();
+		return dao.getEmployeeRole(currentYear);
+	}
+
+	@Override
+	public CensusForm getLoginEmployeeDetails(int clockNumber,String username, String currentYear) {
+		// TODO Auto-generated method stub
+		return dao.getLoginEmployeeDetails(clockNumber,username,currentYear);
 	}
 
 }

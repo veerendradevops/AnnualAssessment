@@ -1,5 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+ 
     <body class="fixed-left">
         <!-- Begin page -->
         <div id="wrapper">
@@ -42,31 +43,20 @@
                                                 <fieldset class="form-group">
                                                    <div class="row">
                                                         <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="2" cols="75" maxlength="150" placeholder="1" name="section2A1Objective">${objData.section2A1Objective}</textarea>
+                                                    	<textarea class="form-control" rows="2" cols="75" maxlength="150" id="1" placeholder="1" name="section2A1Objective" required>${objData.section2A1Objective}</textarea>
                                                         </div>
                                                         <div class="col-xs-2">
-                                                    		<input type="text" class="form-control" id="1" placeholder="0 to 100%" name="Section2A1Level" value="${objData.section2A1Level}">
+                                                    		<input type="text" class="form-control" id="1l" onkeyup="object()" placeholder="0 to 100%" name="Section2A1Level" value="${objData.section2A1Level}"  required>
                                                         </div>
                                                     </div>
                                                 </fieldset>
                                                <fieldset class="form-group">
                                                    <div class="row">
                                                         <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="1" maxlength="150" placeholder="2" name="section2A2Objective">${objData.section2A2Objective}</textarea>
+                                                    	<textarea class="form-control" rows="2" cols="75" maxlength="150" id="2" placeholder="2" name="section2A2Objective" required>${objData.section2A2Objective}</textarea>
                                                         </div>
                                                         <div class="col-xs-2">
-                                                   		<input type="text" class="form-control" id="1" placeholder="0 to 100%" name="Section2A2Level" value="${objData.section2A2Level}">
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
-                                               
-                                               <fieldset class="form-group">
-                                                   <div class="row">
-                                                        <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="1" maxlength="150" placeholder="3" name="section2A3Objective">${objData.section2A3Objective}</textarea>
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                    		<input type="text" class="form-control" id="1" placeholder="0 to 100%" name="Section2A3Level" value="${objData.section2A3Level}">
+                                                   		<input type="text" class="form-control" id="2l" placeholder="0 to 100%" onblur="object()" name="Section2A2Level" value="${objData.section2A2Level}"  required>
                                                         </div>
                                                     </div>
                                                 </fieldset>
@@ -74,10 +64,10 @@
                                                <fieldset class="form-group">
                                                    <div class="row">
                                                         <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="1" maxlength="150" placeholder="4" name="section2A4Objective">${objData.section2A4Objective}</textarea>
+                                                    	<textarea class="form-control" rows="2" cols="75" maxlength="150" id="3" placeholder="3" name="section2A3Objective">${objData.section2A3Objective}</textarea>
                                                         </div>
                                                         <div class="col-xs-2">
-                                                    		<input type="text" class="form-control" id="1" placeholder="0 to 100%"name="Section2A4Level" value="${objData.section2A4Level}">
+                                                    		<input type="text" class="form-control" id="3l" placeholder="0 to 100%" onblur="object()" name="Section2A3Level" value="${objData.section2A3Level}">
                                                         </div>
                                                     </div>
                                                 </fieldset>
@@ -85,10 +75,21 @@
                                                <fieldset class="form-group">
                                                    <div class="row">
                                                         <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="1" maxlength="150" placeholder="5" name="section2A5Objective">${objData.section2A5Objective}</textarea>
+                                                    	<textarea class="form-control" rows="2" cols="75" maxlength="150" id="4" placeholder="4" name="section2A4Objective">${objData.section2A4Objective}</textarea>
                                                         </div>
                                                         <div class="col-xs-2">
-                                                    		<input type="text" class="form-control" id="1" placeholder="0 to 100%"name="Section2A5Level"value="${objData.section2A5Level}">
+                                                    		<input type="text" class="form-control" id="4l" placeholder="0 to 100%" onblur="object()" name="Section2A4Level" value="${objData.section2A4Level}">
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                               
+                                               <fieldset class="form-group">
+                                                   <div class="row">
+                                                        <div class="col-xs-10">
+                                                    	<textarea class="form-control" rows="2" cols="75" maxlength="150" id="5" placeholder="5" name="section2A5Objective">${objData.section2A5Objective}</textarea>
+                                                        </div>
+                                                        <div class="col-xs-2">
+                                                    		<input type="text" class="form-control" id="5l" placeholder="0 to 100%" onblur="object()" name="Section2A5Level"value="${objData.section2A5Level}">
                                                         </div>
                                                     </div>
                                                 </fieldset>
@@ -98,7 +99,8 @@
                                                <fieldset class="form-group">
                                                    <div class="row">
                                                         <div class="col-xs-10">Total</div>
-                                                        <div class="col-xs-2">0.00</div>
+                                                        <p id="sumofavg"></p>
+                                                        <div class="col-xs-2" onblur="object()"></div>
                                                     </div>
                                                 </fieldset>
                                                           
@@ -117,7 +119,7 @@
                                   		</c:forEach>
                                   		</c:if>
                                   		
-                                  		<!-- for inserting data -->
+                                  		<!-- for Retriving data -->
                                   		<c:if test="${empty objectiveAchievement}">
                                   		
                                   		<fieldset class="form-group">
@@ -130,31 +132,20 @@
                                                 <fieldset class="form-group">
                                                    <div class="row">
                                                         <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="2" cols="75" maxlength="150" placeholder="1" name="section2A1Objective">${objData.section2A1Objective}</textarea>
+                                                    	<textarea class="form-control" rows="2" cols="75" maxlength="150" id="1" placeholder="1" onblur="object()" name="section2A1Objective" required>${objData.section2A1Objective}</textarea>
                                                         </div>
                                                         <div class="col-xs-2">
-                                                    		<input type="text" class="form-control" id="1" placeholder="0 to 100%" name="Section2A1Level">
+                                                    		<input type="text" class="form-control" id="1l" placeholder="0 to 100%" onblur="object()" name="Section2A1Level" required>
                                                         </div>
                                                     </div>
                                                 </fieldset>
                                                <fieldset class="form-group">
                                                    <div class="row">
                                                         <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="1" maxlength="150" placeholder="2" name="section2A2Objective"></textarea>
+                                                    	<textarea class="form-control" rows="1" maxlength="150" id="2" placeholder="2" name="section2A2Objective"></textarea>
                                                         </div>
                                                         <div class="col-xs-2">
-                                                   		<input type="text" class="form-control" id="1" placeholder="0 to 100%" name="Section2A2Level">
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
-                                               
-                                               <fieldset class="form-group">
-                                                   <div class="row">
-                                                        <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="1" maxlength="150" placeholder="3" name="section2A3Objective"></textarea>
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                    		<input type="text" class="form-control" id="1" placeholder="0 to 100%" name="Section2A3Level">
+                                                   		<input type="text" class="form-control" id="2l" placeholder="0 to 100%" name="Section2A2Level">
                                                         </div>
                                                     </div>
                                                 </fieldset>
@@ -162,10 +153,10 @@
                                                <fieldset class="form-group">
                                                    <div class="row">
                                                         <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="1" maxlength="150" placeholder="4" name="section2A4Objective"></textarea>
+                                                    	<textarea class="form-control" rows="3" maxlength="150" id="1" placeholder="3" name="section2A3Objective"></textarea>
                                                         </div>
                                                         <div class="col-xs-2">
-                                                    		<input type="text" class="form-control" id="1" placeholder="0 to 100%"name="Section2A4Level">
+                                                    		<input type="text" class="form-control" id="3l" placeholder="0 to 100%" name="Section2A3Level">
                                                         </div>
                                                     </div>
                                                 </fieldset>
@@ -173,10 +164,21 @@
                                                <fieldset class="form-group">
                                                    <div class="row">
                                                         <div class="col-xs-10">
-                                                    	<textarea class="form-control" rows="1" maxlength="150" placeholder="5" name="section2A5Objective"></textarea>
+                                                    	<textarea class="form-control" rows="1" maxlength="150" id="4" placeholder="4" name="section2A4Objective"></textarea>
                                                         </div>
                                                         <div class="col-xs-2">
-                                                    		<input type="text" class="form-control" id="1" placeholder="0 to 100%"name="Section2A5Level">
+                                                    		<input type="text" class="form-control" id="4l" placeholder="0 to 100%"name="Section2A4Level">
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                               
+                                               <fieldset class="form-group">
+                                                   <div class="row">
+                                                        <div class="col-xs-10">
+                                                    	<textarea class="form-control" rows="1" maxlength="150" id="5" placeholder="5" name="section2A5Objective"></textarea>
+                                                        </div>
+                                                        <div class="col-xs-2">
+                                                    		<input type="text" class="form-control" id="5l" placeholder="0 to 100%"name="Section2A5Level">
                                                         </div>
                                                     </div>
                                                 </fieldset>

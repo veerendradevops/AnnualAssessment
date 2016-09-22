@@ -13,6 +13,6 @@ public interface SkillsSelfAssessmentDAO {
 	
 	public boolean updateSkillsSelfAssessmentDetails(SkillsSelfAssessment skillsSelfAssessment,int year);
 	
-	public int fetchYearOfAnSkillsSelfAssessment(int clockNum);
+	public int fetchYearOfAnSkillsSelfAssessment(int clockNum,String year);
 
 }

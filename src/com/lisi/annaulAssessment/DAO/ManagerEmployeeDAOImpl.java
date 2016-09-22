@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.lisi.annaualAssessment.orm.CensusForm;
 import com.lisi.annaualAssessment.orm.PresentYearObjectives;
 import com.lisi.annaulAssessment.controller.ExemptEmployeeController;
 import com.lisi.annaulAssessment.util.Converters;
@@ -56,37 +57,70 @@ public class ManagerEmployeeDAOImpl implements ManagerEmployeeDAO {
 	}
 
 	@Override
-	public List<PresentYearObjectives> retrievePresentYearObjectives() {
+	public PresentYearObjectives retrievePresentYearObjectives(String clockNumber,String year) {
 
 		String statement = "from PresentYearObjectives where empClockNumber=? and annaulYear=?";
+		
+		
+			Query query = sessionFactory.getCurrentSession().createQuery(statement);
 
-		Query query = sessionFactory.getCurrentSession().createQuery(statement);
-
-		query.setInteger(0, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-		query.setString(1, ExemptEmployeeController.getAnnaylYear());
-		// year should pass
-
-		// sessionFactory.getCurrentSession().createQuery(query).list();
-		return (List<PresentYearObjectives>) query.list();
+			query.setInteger(0, Integer.parseInt(clockNumber));
+			query.setString(1, year);
+			
+			PresentYearObjectives presentYearObj=(PresentYearObjectives)query.uniqueResult();
+			
+			if(presentYearObj==null){
+				
+				return null;
+			}
+			
+		return presentYearObj;
 	}
 
 	@Override
-	public void updateDevelopmentGoals(PresentYearObjectives developmentGoals) {
-		
-		String statement="update PresentYearObjectives set meetingSummaryManager=?,meetingSummaryTeamMember=? where empClockNumber=? and annaulYear=?";
-		
+	public void updateDevelopmentGoals(PresentYearObjectives developmentGoals,String clock,String year) {
+
+		String statement = "update PresentYearObjectives set developmentGoalsOne=?,developmentGoalsTwo=?,developmentGoalsThree=?,developmentGoalsFour=?,developmentGoalsFive=? where empClockNumber=? and annaulYear=?";
+
 		Query query = sessionFactory.getCurrentSession().createQuery(statement);
-		
-		query.setParameter(0, developmentGoals.getMeetingSummaryManager());
-		query.setParameter(1, developmentGoals.getMeetingSummaryTeamMember());
-		
-		query.setParameter(2, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-		query.setParameter(3, ExemptEmployeeController.getAnnaylYear());
-		
+
+		log.info(developmentGoals.getDevelopmentGoalsOne());
+		log.info(developmentGoals.getDevelopmentGoalsTwo());
+		log.info(developmentGoals.getDevelopmentGoalsThree());
+		log.info(developmentGoals.getDevelopmentGoalsFour());
+		log.info(developmentGoals.getDevelopmentGoalsFive());
+		log.info(clock);
+		log.info(year);
+		query.setParameter(0, developmentGoals.getDevelopmentGoalsOne());
+		query.setParameter(1, developmentGoals.getDevelopmentGoalsTwo());
+		query.setParameter(2, developmentGoals.getDevelopmentGoalsThree());
+		query.setParameter(3, developmentGoals.getDevelopmentGoalsFour());
+		query.setParameter(4, developmentGoals.getDevelopmentGoalsFive());
+
+		query.setParameter(5, Integer.parseInt(clock.trim()));
+		query.setParameter(6, year.trim());
+
 		query.executeUpdate();
+
+	}
+
+	@Override
+	public void updateMeetingSummary(PresentYearObjectives meetingSummary) {
+	
+		String statement = "update PresentYearObjectives set meetingSummaryManager=?,meetingSummaryTeamMember=? where empClockNumber=? and annaulYear=?";
 		
+
+		Query query = sessionFactory.getCurrentSession().createQuery(statement);
+
+		query.setParameter(0, meetingSummary.getMeetingSummaryManager());
+		query.setParameter(1, meetingSummary.getMeetingSummaryTeamMember());
 		
-		
+
+		query.setParameter(2, meetingSummary.getEmpClockNumber());
+		query.setParameter(3, meetingSummary.getAnnaulYear());
+
+		query.executeUpdate();
+
 		
 	}
 

@@ -1,588 +1,402 @@
-﻿<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="com.lisi.annaulAssessment.util.Converters"%>
-<head>
-<%-- <spring:url value="/js/index.js" var="index" />
 
-    <script src="${index}"></script>
-     <script src="<c:url value="js/index.js" />"></script>
-	<script type="text/javascript"> --%>
-	<!-- <script>
-	function sum1() {
-		alert("Hi welcome to index");
-	    var result=0;
-	var responsibilityScore=document.getElementById('score').value;
-	var adaptabilityScore=document.getElementById('score').value;
-	var judgementScore=document.getElementById('score').value;
-	var writtenAndOralCommunicationScore=document.getElementById('score').value;
-	var punctualityAndCommitmentScore=document.getElementById('score').value;
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="sum1();">
 
-	 var result = (parseInt(responsibilityScore) + parseInt(adaptabilityScore)+parseInt(judgementScore)+parseInt(writtenAndOralCommunicationScore)+parseInt( punctualityAndCommitmentScore))/5;
-	 if (!isNaN(result)) 
-	    { 
-	        document.getElementById('score').value = result;
-	    } 
-	}
-	</script> -->
-</head>
-
-<body class="fixed-left">
-
-
-	
-
-	<%!int year;%>
+	<%!String year;%>
 	<%
-		year =Integer.parseInt(Converters.getCurrentYear().trim());
-		pageContext.setAttribute("year", year);
+		year = Converters.getCurrentYear();
 	%>
-	<!-- Begin page -->
-	<div id="wrapper">
+	<!-- BEGIN CONTENT -->
+	<div class="page-content-wrapper">
+		<!-- BEGIN CONTENT BODY -->
+		<div class="page-content">
+			<!-- BEGIN PAGE HEADER-->
+
+			<!-- BEGIN PAGE BAR -->
+			<div class="page-bar">
+				<ul class="page-breadcrumb">
+					<li><a href="index.html">Home</a> <i class="fa fa-circle"></i>
+					</li>
+					<li><span>Interpersonal Skills</span></li>
+				</ul>
+			</div>
+			<!-- END PAGE BAR -->
+			<!-- BEGIN PAGE TITLE-->
+			<h3 class="page-title">Interpersonal Skills</h3>
+			<!-- END PAGE TITLE-->
+			<!-- END PAGE HEADER-->
 
 
 
+			<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN VALIDATION STATES-->
+					<div class="portlet light portlet-fit portlet-form bordered">
 
-		<!-- ============================================================== -->
-		<!-- Start right Content here -->
-		<!-- ============================================================== -->
-		<div class="content-page">
-			<!-- Start content -->
-			<div class="content">
-				<div class="container">
-
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="page-title-box">
-								<h4 class="page-title">${year}Payroll</h4>
-								<ol class="breadcrumb p-0">
-									<li><a href="#">${year} Payroll</a></li>
-									<li class="active">Interpersonal Skills</li>
-								</ol>
-								<div class="clearfix"></div>
-							</div>
-						</div>
-					</div>
-					<!-- end row -->
+						<div class="portlet-body">
+							<!-- BEGIN FORM-->
 
 
-					<div class="row">
-						<div class="col-sm-12">
-							<div class="card-box">
-								<div style="color: red" align=center>
+							<form:form action="interpersonalForm.do" method="post"
+								modelAttribute="interpersonal" id="form_sample_3"
+								class="form-horizontal">
 
-									<c:if test="${!empty message}" > 
-                                                   ${message}
-                                                </c:if>
-								</div>
-								<h4 class="header-title m-t-0 m-b-30">Interpersonal Skills</h4>
-								<p>SCORE: Rate each performance factor. Unacceptable = 0 –
-									0.75; Needs Improvement = 1 – 1.75 Meets Expectations = 2 –
-									2.75; Exceeds Expectations 3+. COMMENTS: A “Needs Improvement”
-									rating must have an Explanation with Action and Follow Up. An
-									“Exceeds Expectations” rating must have a justification. All
-									sections MUST have a comment.</p>
-								<div class="row">
+								<c:if test="${!empty interpersonalData}">
 
-									<div class="col-lg-12 col-sm-12 col-xs-12 col-md-12">
-										<form:form action="interpersonalForm.do" method="post"
-											modelAttribute="interpersonal">
+									<c:forEach items="${interpersonalData}" var="idetails">
 
-											<c:if test="${!empty interpersonalData}">
+										<div class="form-body">
+											<p>SCORE: Rate each performance factor. Unacceptable = 0 &#45
+												0.75; Needs Improvement = 1 &#45 1.75 Meets Expectations = 2 &#45
+												2.75; Exceeds Expectations 3+. COMMENTS: A "Needs
+												Improvement" rating must have an Explanation with Action and
+												Follow Up. An "Exceeds Expectations" rating must have a
+												justification. All sections MUST have a comment.</p>
 
-												<c:forEach items="${interpersonalData}" var="idetails">
-
-													<fieldset class="form-group">
-														<div class="row">
-															<div class="col-xs-10">
-																<p>
-																	<strong>Responsibility:</strong><br> Makes sound
-																	decisions with factual data and can present objective
-																	arguments for those decisions. Minimal decision making
-																	by subjectivity.
-																</p>
-															</div>
-															<div class="col-xs-2">
-																<label for="exampleInputPassword1">SCORE:</label> <input
-																	type="text" class="form-control" id="rscore"
-																	placeholder="score" name="responsibilityScore" required
-																	onkeyup="sum1();"
-																	value=" <c:out value="${idetails.responsibilityScore}" />">
-															</div>
-														</div>
-													</fieldset>
-
-
-													<fieldset class="form-group">
-														<label for="exampleInputEmail1">Supervisor's
-															Comments:</label>
-														<textarea class="form-control" id="exampleTextarea"
-															rows="1" name="responsibilitySupervisorsComments"
-															required><c:out
+											<div class="form-group">
+												<label class="control-label col-md-10"><strong>Responsibility:</strong><br>Makes
+													sound decisions with factual data and can present objective
+													arguments for those decisions. Minimal decision making by
+													subjectivity.</label>
+												<div class="col-md-2">
+													Score:<br> <input type="text" class="form-control"
+														id="rscore" placeholder="score" name="responsibilityScore" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+														required onkeyup="sum1();"
+														value=" <c:out value="${idetails.responsibilityScore}" />">
+												</div>
+												<div class="form-group">
+													<div class="col-md-12">
+														Supervisor&#39s Comments:<br>
+														<textarea rows="2" cols="75" maxlength="150"
+															class="form-control" id="exampleTextarea" title="Maximum length allowed is 150 characters"
+															name="responsibilitySupervisorsComments" required><c:out
 																value="${idetails.responsibilitySupervisorsComments}" /> </textarea>
-													</fieldset>
+													</div>
+												</div>
 
-													<fieldset class="form-group">
-														<div class="row">
-															<div class="col-xs-10">
-																<p>
-																	<strong>Adaptability: </strong><br> Team Member is
-																	able to adjust to a variety of situations. Flexible to
-																	company needs. Carries out assignments, jobs, tasks,
-																	and projects consistently and completely. Overcomes
-																	obstacles and accepts challenges with enthusiasm.
-																</p>
-															</div>
-															<div class="col-xs-2">
-																<label for="exampleInputPassword1">SCORE:</label> <input
-																	type="text" class="form-control" id="ascore"
-																	placeholder="score" name="adaptabilityScore" required
-																	onkeyup="sum1();"
-																	value=" <c:out value="${idetails.adaptabilityScore}" />">
-															</div>
-														</div>
-													</fieldset>
 
-													<fieldset class="form-group">
-														<label for="exampleInputEmail1">Supervisor's
-															Comments:</label>
-														<textarea class="form-control" id="exampleTextarea"
-															rows="1" name="adaptabilitySupervisorsComments" required><c:out
+												<div class="form-group">
+													<label class="control-label col-md-10"><strong>Adaptability:</strong><br>Team
+														Member is able to adjust to a variety of situations.
+														Flexible to company needs. Carries out assignments, jobs,
+														tasks, and projects consistently and completely. Overcomes
+														obstacles and accepts challenges with enthusiasm.</label>
+													<div class="col-md-2">
+														Score:<br> <input type="text" class="form-control"
+															id="ascore" placeholder="score" name="adaptabilityScore" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+															required onkeyup="sum1();"
+															value=" <c:out value="${idetails.adaptabilityScore}" />">
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-md-12">
+														Supervisor&#39s Comments:<br>
+														<textarea maxlength="150" rows="2" cols="75"
+															class="form-control" id="exampleTextarea" title="Maximum length allowed is 150 characters"
+															name="adaptabilitySupervisorsComments" required><c:out
 																value="${idetails.adaptabilitySupervisorsComments}" /></textarea>
-													</fieldset>
-													<fieldset class="form-group">
-														<div class="row">
-															<div class="col-xs-10">
-																<p>
-																	<strong>Initiative:</strong> <br> Team Member
-																	consistently demonstrates self-motivation by
-																	maintaining a solid work rhythm. Moves on to the next
-																	assignment without reminders. Seeks additional projects
-																	and/or offers to assist other team members.
-																</p>
-															</div>
-															<div class="col-xs-2">
-																<label for="exampleInputPassword1">SCORE:</label> <input
-																	type="text" class="form-control" id="iscore"
-																	placeholder="score" name="initiativeScore" required
-																	onkeyup="sum1();"
-																	value=" <c:out value="${idetails.initiativeScore}" />">
-															</div>
-														</div>
-													</fieldset>
-													<fieldset class="form-group">
-														<label for="exampleInputEmail1">Supervisor's
-															Comments:</label>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-10"><strong>Initiative:</strong><br>Team
+														Member consistently demonstrates self-motivation by
+														maintaining a solid work rhythm. Moves on to the next
+														assignment without reminders. Seeks additional projects
+														and/or offers to assist other team members.</label>
+													<div class="col-md-2">
+														Score:<br> <input type="text" class="form-control"
+															id="iscore" placeholder="score" name="initiativeScore"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+															required onkeyup="sum1();"
+															value=" <c:out value="${idetails.initiativeScore}" />">
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-md-12">
+														Supervisor&#39s Comments:<br>
 														<textarea class="form-control" id="exampleTextarea"
-															rows="1" name=
-															"initiativeSupervisorsComments"
-															required><c:out
+															maxlength="150" rows="2" cols="75" title="Maximum length allowed is 150 characters"
+															name="initiativeSupervisorsComments" required><c:out
 																value="${idetails.initiativeSupervisorsComments}" /></textarea>
-													</fieldset>
-													<fieldset class="form-group">
-														<div class="row">
-															<div class="col-xs-10">
-																<p>
-																	<strong>Judgement:</strong> <br> Uses logical and
-																	sound judgment organizes and prioritizes work even when
-																	encountered with conflicting priorities, seeks guidance
-																	if necessary.
-																</p>
-															</div>
-															<div class="col-xs-2">
-																<label for="exampleInputPassword1">SCORE:</label> <input
-																	type="text" class="form-control" id="jscore"
-																	placeholder="score" name="judgementScore" required
-																	onkeyup="sum1();"
-																	value=" <c:out value="${idetails.judgementScore}" />">
-															</div>
-														</div>
-													</fieldset>
-													<fieldset class="form-group">
-														<label for="exampleInputEmail1">Supervisor's
-															Comments:</label>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-10"><strong>Judgement:</strong><br>Uses
+														logical and sound judgment organizes and prioritizes work
+														even when encountered with conflicting priorities, seeks
+														guidance if necessary.</label>
+													<div class="col-md-2">
+														Score:<br> <input type="text" class="form-control"
+															id="jscore" placeholder="score" name="judgementScore" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+															required onkeyup="sum1();"
+															value=" <c:out value="${idetails.judgementScore}" />">
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-md-12">
+														Supervisor&#39s Comments:<br>
 														<textarea class="form-control" id="exampleTextarea"
-															rows="1" name="judgementSupervisorsComments" required><c:out
+															maxlength="150" rows="2" cols="75" title="Maximum length allowed is 150 characters"
+															name="judgementSupervisorsComments" required><c:out
 																value="${idetails.judgementSupervisorsComments}" /></textarea>
-													</fieldset>
-													<fieldset class="form-group">
-														<div class="row">
-															<div class="col-xs-10">
-																<p>
-																	<strong>Written and Oral Communication:</strong> <br>
-																	Communicates in a logical and clear manner with others.
-																	Effectively listens, suggests and interacts with other
-																	team members and supervisors on all job related items.
-																	Welcomes and seeks constructive feedback on own
-																	performance for improvement. Elevates and Informs
-																	supervisors on job related matters, seeking advice and
-																	assistance to obtain a positive department/ Company
-																	image.
-																</p>
-															</div>
-															<div class="col-xs-2">
-																<label for="exampleInputPassword1">SCORE:</label> <input
-																	type="text" class="form-control" id="wscore"
-																	placeholder="score"
-																	name="writtenAndOralCommunicationScore" required
-																	onkeyup="sum1();"
-																	value=" <c:out value="${idetails.writtenAndOralCommunicationScore}" />">
-															</div>
-														</div>
-													</fieldset>
-													<fieldset class="form-group">
-														<label for="exampleInputEmail1">Supervisor's
-															Comments:</label>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-10"><strong>Written
+															and Oral Communication:</strong><br>Communicates in a logical
+														and clear manner with others. Effectively listens,
+														suggests and interacts with other team members and
+														supervisors on all job related items. Welcomes and seeks
+														constructive feedback on own performance for improvement.
+														Elevates and Informs supervisors on job related matters,
+														seeking advice and assistance to obtain a positive
+														department/ Company image.</label>
+													<div class="col-md-2">
+														Score:<br> <input type="text" class="form-control"
+															id="wscore" placeholder="score" 
+															name="writtenAndOralCommunicationScore" requiredonkeypress='return event.charCode >= 48 && event.charCode <= 57'
+															onkeyup="sum1();"
+															value=" <c:out value="${idetails.writtenAndOralCommunicationScore}" />">
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-md-12">
+														Supervisor&#39s Comments:<br>
 														<textarea class="form-control" id="exampleTextarea"
-															rows="1"
-															name="writtenAndOralCommunicationSupervisorsComments"
+															maxlength="300" rows="4" cols="75"
+															name="writtenAndOralCommunicationSupervisorsComments" title="Maximum length allowed is 300 characters"
 															required><c:out
 																value="${idetails.writtenAndOralCommunicationSupervisorsComments}" /></textarea>
-													</fieldset>
-
-													<!-- <fieldset class="form-group">
-													<div class="row">
-														<div class="col-xs-10">
-															<p>
-																<strong>Written and Oral Communication:</strong> <br>
-																Communicates in a logical and clear manner with others.
-																Effectively listens, suggests and interacts with other
-																team members and supervisors on all job related items.
-																Welcomes and seeks constructive feedback on own
-																performance for improvement. Elevates and Informs
-																supervisors on job related matters, seeking advice and
-																assistance to obtain a positive department/ Company
-																image.
-															</p>
-														</div>
-														<div class="col-xs-2">
-															<label for="exampleInputPassword1">SCORE:</label> <input
-																type="text" class="form-control" id="score"
-																placeholder="score">
-														</div>
 													</div>
-												</fieldset>
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Supervisor’s
-														Comments:</label>
-													<textarea class="form-control" id="exampleTextarea"
-														rows="1"></textarea>
-												</fieldset> -->
+												</div>
 
-													<fieldset class="form-group">
-														<div class="row">
-															<div class="col-xs-10">
-																<p>
-																	<strong>Attendance, Punctuality and
-																		Commitment:</strong> <br> Punctual and regular attendance.
-																	Meets deadlines without close supervision. Reliable in
-																	completing assigned tasks.
-																</p>
-															</div>
-															<div class="col-xs-2">
-																<label for="exampleInputPassword1">SCORE:</label> <input
-																	type="text" class="form-control" id="pscore"
-																	placeholder="score"
-																	name="punctualityAndCommitmentScore" required
-																	onkeyup="sum1();"
-																	value=" <c:out value="${idetails.punctualityAndCommitmentScore}" />">
-															</div>
-														</div>
-													</fieldset>
-													<fieldset class="form-group">
-														<label for="exampleInputEmail1">Supervisor's
-															Comments:</label>
+												<div class="form-group">
+													<label class="control-label col-md-10"><strong>Attendance,
+															Punctuality and Commitment:</strong><br>Punctual and regular
+														attendance. Meets deadlines without close supervision.
+														Reliable in completing assigned tasks.</label>
+													<div class="col-md-2">
+														Score:<br> <input type="text" class="form-control"
+															id="pscore" placeholder="score"
+															name="punctualityAndCommitmentScore" required onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+															onkeyup="sum1();"
+															value=" <c:out value="${idetails.punctualityAndCommitmentScore}" />">
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="col-md-12">
+														Supervisor&#39s Comments:<br>
 														<textarea class="form-control" id="exampleTextarea"
-															rows="1"
-															name="punctualityAndCommitmentSupervisorsComments"
+															maxlength="300" rows="4" cols="75"
+															name="punctualityAndCommitmentSupervisorsComments" title="Maximum length allowed is 300 characters"
 															required><c:out
 																value="${idetails.punctualityAndCommitmentSupervisorsComments}" /></textarea>
-													</fieldset>
-													<div class="form-group row">
-														<div class="col-sm-9">
-															<label>&nbsp;</label>
-														</div>
-														<div class="col-sm-3">
-															<label>Average Score  </label> <p id="tscore" >${idetails.avgScore}</p>
-															<input type="hidden" name="avgScore" id="totalscore" >
-														</div>
 													</div>
-												</c:forEach>
-											</c:if>
-											<c:if test="${empty interpersonalData}">
-												<fieldset class="form-group">
-													<div class="row">
-														<div class="col-xs-10">
-															<p>
-																<strong>Responsibility:</strong><br> Makes sound
-																decisions with factual data and can present objective
-																arguments for those decisions. Minimal decision making
-																by subjectivity.
-															</p>
-														</div>
-														<div class="col-xs-2">
-															<label for="exampleInputPassword1">SCORE:</label> <input
-																type="text" class="form-control" id="rscore"
-																placeholder="score" name="responsibilityScore" required
-																onkeyup="sum1();">
-														</div>
+												</div>
+
+												<div class="form-group">
+													<div class="col-md-9"></div>
+													<div class="col-md-3">
+														Average Score:
+														<p id="tscore">${idetails.avgScore}</p>
 													</div>
-												</fieldset>
+
+													<input type="hidden" name="avgScore" id="totalscore"
+														value="${idetails.avgScore}">
+												</div>
+
+											</div>
+										</div>
+									</c:forEach>
+								</c:if>
 
 
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Supervisor's
-														Comments:</label>
-													<textarea class="form-control" id="exampleTextarea"
-														rows="1" name="responsibilitySupervisorsComments" required></textarea>
-												</fieldset>
+								<c:if test="${empty interpersonalData}">
 
-												<fieldset class="form-group">
-													<div class="row">
-														<div class="col-xs-10">
-															<p>
-																<strong>Adaptability: </strong><br> Team Member is
-																able to adjust to a variety of situations. Flexible to
-																company needs. Carries out assignments, jobs, tasks, and
-																projects consistently and completely. Overcomes
-																obstacles and accepts challenges with enthusiasm.
-															</p>
-														</div>
-														<div class="col-xs-2">
-															<label for="exampleInputPassword1">SCORE:</label> <input
-																type="text" class="form-control" id="ascore"
-																placeholder="score" name="adaptabilityScore" required
-																onkeyup="sum1();">
-														</div>
-													</div>
-												</fieldset>
 
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Supervisor's
-														Comments:</label>
+
+									<div class="form-body">
+										<p>SCORE: Rate each performance factor. Unacceptable = 0&#45
+											0.75; Needs Improvement = 1 &#45 1.75 Meets Expectations =
+											2 &#45 2.75; Exceeds Expectations 3+. COMMENTS: A "Needs
+											Improvement" rating must have an Explanation with Action and
+											Follow Up. An "Exceeds Expectations" rating must have a
+											justification. All sections MUST have a comment.</p>
+
+										<div class="form-group">
+											<label class="control-label col-md-10"><strong>Responsibility:</strong><br>Makes
+												sound decisions with factual data and can present objective
+												arguments for those decisions. Minimal decision making by
+												subjectivity.</label>
+											<div class="col-md-2">
+												Score:<br> <input type="text" class="form-control"
+													id="rscore" placeholder="score" name="responsibilityScore" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+													required onkeyup="sum1();">
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													Supervisor&#39s Comments:<br>
+													<textarea  class="form-control" rows="2" cols="75" maxlength="150"
+														 id="exampleTextarea" title="Maximum length allowed is 150 characters"
+														name="responsibilitySupervisorsComments"  required></textarea>
+												</div>
+											</div>
+
+
+											<div class="form-group">
+												<label class="control-label col-md-10"><strong>Adaptability:</strong><br>Team
+													Member is able to adjust to a variety of situations.
+													Flexible to company needs. Carries out assignments, jobs,
+													tasks, and projects consistently and completely. Overcomes
+													obstacles and accepts challenges with enthusiasm.</label>
+												<div class="col-md-2">
+													Score:<br> <input type="text" class="form-control"
+														id="ascore" placeholder="score" name="adaptabilityScore" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+														required onkeyup="sum1();">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													Supervisor&#39s Comments:<br>
+													<textarea maxlength="150" rows="2" cols="75"
+														class="form-control" id="exampleTextarea" title="Maximum length allowed is 150 characters"
+														name="adaptabilitySupervisorsComments" required></textarea>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-10"><strong>Initiative:</strong><br>Team
+													Member consistently demonstrates self-motivation by
+													maintaining a solid work rhythm. Moves on to the next
+													assignment without reminders. Seeks additional projects
+													and/or offers to assist other team members.</label>
+												<div class="col-md-2">
+													Score:<br> <input type="text" class="form-control"
+														id="iscore" placeholder="score" name="initiativeScore" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+														required onkeyup="sum1();">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													Supervisor&#39s Comments:<br>
 													<textarea class="form-control" id="exampleTextarea"
-														rows="1" name="adaptabilitySupervisorsComments" required></textarea>
-												</fieldset>
-												<fieldset class="form-group">
-													<div class="row">
-														<div class="col-xs-10">
-															<p>
-																<strong>Initiative:</strong> <br> Team Member
-																consistently demonstrates self-motivation by maintaining
-																a solid work rhythm. Moves on to the next assignment
-																without reminders. Seeks additional projects and/or
-																offers to assist other team members.
-															</p>
-														</div>
-														<div class="col-xs-2">
-															<label for="exampleInputPassword1">SCORE:</label> <input
-																type="text" class="form-control" id="iscore"
-																placeholder="score" name="initiativeScore" required
-																onkeyup="sum1();">
-														</div>
-													</div>
-												</fieldset>
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Supervisor's
-														Comments:</label>
+														maxlength="150" rows="2" cols="75" title="Maximum length allowed is 150 characters"
+														name="initiativeSupervisorsComments" required></textarea>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-10"><strong>Judgement:</strong><br>Uses
+													logical and sound judgment organizes and prioritizes work
+													even when encountered with conflicting priorities, seeks
+													guidance if necessary.</label>
+												<div class="col-md-2">
+													Score:<br> <input type="text" class="form-control"
+														id="jscore" placeholder="score" name="judgementScore" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+														required onkeyup="sum1();">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													Supervisor&#39s Comments:<br>
 													<textarea class="form-control" id="exampleTextarea"
-														rows="1" name="initiativeSupervisorsComments" required></textarea>
-												</fieldset>
-												<fieldset class="form-group">
-													<div class="row">
-														<div class="col-xs-10">
-															<p>
-																<strong>Judgement:</strong> <br> Uses logical and
-																sound judgment organizes and prioritizes work even when
-																encountered with conflicting priorities, seeks guidance
-																if necessary.
-															</p>
-														</div>
-														<div class="col-xs-2">
-															<label for="exampleInputPassword1">SCORE:</label> <input
-																type="text" class="form-control" id="jscore"
-																placeholder="score" name="judgementScore" required
-																onkeyup="sum1();">
-														</div>
-													</div>
-												</fieldset>
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Supervisor's
-														Comments:</label>
+														maxlength="150" rows="2" cols="75" title="Maximum length allowed is 150 characters"
+														name="judgementSupervisorsComments" required></textarea>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-10"><strong>Written
+														and Oral Communication:</strong><br>Communicates in a logical
+													and clear manner with others. Effectively listens, suggests
+													and interacts with other team members and supervisors on
+													all job related items. Welcomes and seeks constructive
+													feedback on own performance for improvement. Elevates and
+													Informs supervisors on job related matters, seeking advice
+													and assistance to obtain a positive department/ Company
+													image.</label>
+												<div class="col-md-2">
+													Score:<br> <input type="text" class="form-control"
+														id="wscore" placeholder="score"
+														name="writtenAndOralCommunicationScore" required onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+														onkeyup="sum1();">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													Supervisor&#39s Comments:<br>
 													<textarea class="form-control" id="exampleTextarea"
-														rows="1" name="judgementSupervisorsComments" required></textarea>
-												</fieldset>
-												<fieldset class="form-group">
-													<div class="row">
-														<div class="col-xs-10">
-															<p>
-																<strong>Written and Oral Communication:</strong> <br>
-																Communicates in a logical and clear manner with others.
-																Effectively listens, suggests and interacts with other
-																team members and supervisors on all job related items.
-																Welcomes and seeks constructive feedback on own
-																performance for improvement. Elevates and Informs
-																supervisors on job related matters, seeking advice and
-																assistance to obtain a positive department/ Company
-																image.
-															</p>
-														</div>
-														<div class="col-xs-2">
-															<label for="exampleInputPassword1">SCORE:</label> <input
-																type="text" class="form-control" id="wscore"
-																placeholder="score"
-																name="writtenAndOralCommunicationScore" required
-																onkeyup="sum1();">
-														</div>
-													</div>
-												</fieldset>
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Supervisor's
-														Comments:</label>
-													<textarea class="form-control" id="exampleTextarea"
-														rows="1"
+														maxlength="300" rows="4" cols="75" title="Maximum length allowed is 300 characters"
 														name="writtenAndOralCommunicationSupervisorsComments"
 														required></textarea>
-												</fieldset>
+												</div>
+											</div>
 
-												<!-- <fieldset class="form-group">
-													<div class="row">
-														<div class="col-xs-10">
-															<p>
-																<strong>Written and Oral Communication:</strong> <br>
-																Communicates in a logical and clear manner with others.
-																Effectively listens, suggests and interacts with other
-																team members and supervisors on all job related items.
-																Welcomes and seeks constructive feedback on own
-																performance for improvement. Elevates and Informs
-																supervisors on job related matters, seeking advice and
-																assistance to obtain a positive department/ Company
-																image.
-															</p>
-														</div>
-														<div class="col-xs-2">
-															<label for="exampleInputPassword1">SCORE:</label> <input
-																type="text" class="form-control" id="score"
-																placeholder="score">
-														</div>
-													</div>
-												</fieldset>
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Supervisor’s
-														Comments:</label>
+											<div class="form-group">
+												<label class="control-label col-md-10"><strong>Attendance,
+														Punctuality and Commitment:</strong><br>Punctual and regular
+													attendance. Meets deadlines without close supervision.
+													Reliable in completing assigned tasks.</label>
+												<div class="col-md-2">
+													Score:<br> <input type="text" class="form-control"
+														id="pscore" placeholder="score" 
+														name="punctualityAndCommitmentScore" required onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+														onkeyup="sum1();">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													Supervisor&#39s Comments:<br>
 													<textarea class="form-control" id="exampleTextarea"
-														rows="1"></textarea>
-												</fieldset> -->
-
-												<fieldset class="form-group">
-													<div class="row">
-														<div class="col-xs-10">
-															<p>
-																<strong>Attendance, Punctuality and Commitment:</strong>
-																<br> Punctual and regular attendance. Meets
-																deadlines without close supervision. Reliable in
-																completing assigned tasks.
-															</p>
-														</div>
-														<div class="col-xs-2">
-															<label for="exampleInputPassword1">SCORE:</label> <input
-																type="text" class="form-control" id="pscore"
-																placeholder="score" name="punctualityAndCommitmentScore"
-																required required onkeyup="sum1();">
-														</div>
-													</div>
-												</fieldset>
-												<fieldset class="form-group">
-													<label for="exampleInputEmail1">Supervisor's
-														Comments:</label>
-													<textarea class="form-control" id="exampleTextarea"
-														rows="1"
+														maxlength="300" rows="4" cols="75" title="Maximum length allowed is 300 characters"
 														name="punctualityAndCommitmentSupervisorsComments"
 														required></textarea>
-												</fieldset>
-
-												<div class="form-group row">
-													<div class="col-sm-9">
-														<label>&nbsp;</label>
-													</div>
-													<div class="col-sm-3" >
-															<label>Average Score  </label> <p id="tscore"></p>
-															
-															<input type="hidden" name="avgScore" id="totalscore">
-														</div>
 												</div>
-											</c:if>
-
-											<div class="form-group row col-sm-12 col-xs-12">
-												<input type="submit" value="2 of 5">
 											</div>
-										</form:form>
 
+											<div class="form-group">
+												<div class="col-md-9"></div>
+												<div class="col-md-3">
+													Average Score :
+													<p id="tscore">${idetails.avgScore}</p>
+												</div>
+
+												<input type="hidden" name="avgScore" id="totalscore"
+													value="${idetails.avgScore}">
+											</div>
+
+										</div>
 									</div>
-									<!-- end col -->
 
+								</c:if>
+								<div class="form-actions">
+									<div class="row">
+										<div class="col-md-12">
+											<button type="submit" class="btn green" name="btnSubmitBackSave">Back & Save</button>
+											&nbsp;&nbsp;&nbsp;
+											<button type="submit" class="btn green" name="btnSubmitNextSave">Next & Save</button>
+										</div>
+									</div>
+									<div class="row" align="right">2 of
+										5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 								</div>
-								<!-- end row -->
-							</div>
+							</form:form>
+							<!-- END FORM-->
 						</div>
-						<!-- end col -->
+						<!-- END VALIDATION STATES-->
 					</div>
-					<!-- end row -->
-
-
 				</div>
-				<!-- container -->
-
 			</div>
-			<!-- content -->
-
 		</div>
-		<!-- End content-page -->
-
-
-		<!-- ============================================================== -->
-		<!-- End Right content here -->
-		<!-- ============================================================== -->
-
-
-		<footer class="footer text-right"> 2016 © Lisi Aerospace. </footer>
-
-
+		<!-- END CONTENT BODY -->
 	</div>
-	<!-- END wrapper -->
+	<!-- END CONTENT -->
 
 
-	<script>
-		var resizefunc = [];
-	</script>
-
-	<!-- jQuery  -->
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/tether.min.js"></script>
-	<!-- Tether for Bootstrap -->
-	<script src="assets/js/bootstrap.min.js"></script>
-	<script src="assets/js/detect.js"></script>
-	<script src="assets/js/fastclick.js"></script>
-	<script src="assets/js/jquery.blockUI.js"></script>
-	<script src="assets/js/waves.js"></script>
-	<script src="assets/js/jquery.nicescroll.js"></script>
-	<script src="assets/js/jquery.scrollTo.min.js"></script>
-	<script src="assets/js/jquery.slimscroll.js"></script>
-	<script src="assets/plugins/switchery/switchery.min.js"></script>
-
-	<script src="assets/plugins/moment/moment.js"></script>
-	<script src="assets/plugins/timepicker/bootstrap-timepicker.min.js"></script>
-	<script
-		src="assets/plugins/mjolnic-bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
-	<script
-		src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-	<script src="assets/plugins/clockpicker/bootstrap-clockpicker.js"></script>
-	<script
-		src="assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
-
-	<script src="assets/pages/jquery.form-pickers.init.js"></script>
-
-	<!-- App js -->
-	<script src="assets/js/jquery.core.js"></script>
-	<script src="assets/js/jquery.app.js"></script>
+	<!-- END CONTAINER -->
 </body>
-</html>

@@ -15,7 +15,7 @@ public interface ExemptTeamMemberService {
 
 	public int fetchYearOfAnEmployee(int clockNum);
 	
-	public int updateCensusForm(String status);
+	public int updateCensusForm(String status,String clock);
 
 	
 

@@ -3,6 +3,8 @@ package com.lisi.annaulAssessment.Emp.Form;
 import java.text.ParseException;
 import java.util.Set;
 
+import javax.persistence.Column;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,6 +16,8 @@ import com.lisi.annaulAssessment.controller.ExemptEmployeeController;
 import com.lisi.annaulAssessment.pojo.XlsxHeader;
 import com.lisi.annaulAssessment.service.UploadFormService;
 import com.lisi.annaulAssessment.util.Converters;
+
+import net.sf.jasperreports.engine.export.EmptyGridCell;
 
 public class XLSXFormValidation {
 
@@ -33,9 +37,21 @@ public class XLSXFormValidation {
 			String columnName, String columnValue) {
 
 		System.out.println(columnName + " name  " + columnValue);
-		
-		if(columnName.trim().equals("")){
-			
+
+		/*
+		 * if(columnName.trim().equals("")){
+		 * 
+		 * return censusForm; }
+		 * 
+		 */
+		if (String.valueOf(columnValue.trim()).equalsIgnoreCase("null")
+				|| String.valueOf(columnValue.trim()).isEmpty()) {
+
+			return censusForm;
+		}
+
+		if (String.valueOf(columnName.trim()).equalsIgnoreCase("null") || String.valueOf(columnName.trim()).isEmpty()) {
+
 			return censusForm;
 		}
 
@@ -45,6 +61,7 @@ public class XLSXFormValidation {
 
 			String clockNumber = replaceDotZeros(columnValue.trim());
 
+			log.info(clockNumber);
 			if (String.valueOf(clockNumber).length() > 5) {
 
 				CensusFileUploadController.cellOneErrorMessage = clockNumber;
@@ -252,10 +269,10 @@ public class XLSXFormValidation {
 					log.info("s if");
 					censusForm.setEmpEmailAddress(columnValue);
 					return censusForm;
-				}else{
+				} else {
 					censusForm.setEmpEmailAddress(columnValue);
 					return censusForm;
-					
+
 				}
 
 			} else if (censusForm.getHourlyOrSalary().equalsIgnoreCase("H")) {
@@ -523,10 +540,11 @@ public class XLSXFormValidation {
 		else if (XlsxHeader.increaseYN.getValue().contains(columnName.trim())) {
 
 			if (columnValue.trim().equalsIgnoreCase("Y")) {
-				
+				log.info(censusForm.getEmpClockNumber());
 				log.info(columnValue);
 				log.info("yes for increase");
-				censusForm.setHourlyOrSalary(columnValue);
+				// censusForm.setHourlyOrSalary(columnValue);
+				censusForm.setSalaryIncreaseOrNot(columnValue);
 				return censusForm;
 
 			} else if (columnValue.trim().equalsIgnoreCase("N")) {
@@ -535,29 +553,78 @@ public class XLSXFormValidation {
 
 				System.out.println(censusForm.getDiscDate());
 
-				if (censusForm.getDiscDate() == null && censusForm.getDisciplinaryDescription().isEmpty()) {
-					CensusFileUploadController.cellOneErrorMessage = String
-							.valueOf(CensusFileUploadController.cellOneErrorMessage);
-					CensusFileUploadController.cellTwoErrorMessage += "increase condition is not satisfied;";
-
-					return null;
-				} else {
-					censusForm.setHourlyOrSalary(columnValue);
-					return censusForm;
-				}
-			} else if(columnValue.trim().isEmpty()){
+				/*
+				 * if (censusForm.getDiscDate() == null &&
+				 * censusForm.getDisciplinaryDescription().isEmpty()) {
+				 * CensusFileUploadController.cellOneErrorMessage = String
+				 * .valueOf(CensusFileUploadController.cellOneErrorMessage);
+				 * CensusFileUploadController.cellTwoErrorMessage +=
+				 * "increase condition is not satisfied;";
+				 * 
+				 * return null; } else {
+				 */
+				// censusForm.setHourlyOrSalary(columnValue);
+				censusForm.setSalaryIncreaseOrNot(columnValue);
+				return censusForm;
+				// }
+			} else if (columnValue.trim().isEmpty()) {
+				log.info("empty " + censusForm.getEmpClockNumber());
 				log.info("empty : " + columnValue);
 				log.info("increase condition is shit");
+				censusForm.setSalaryIncreaseOrNot(" ");
+				// CensusFileUploadController.cellOneErrorMessage = String
+				// .valueOf(CensusFileUploadController.cellOneErrorMessage);
+				// CensusFileUploadController.cellTwoErrorMessage += "increase
+				// condition is not satisfied;";
+				// return null;
+				return censusForm;
+			}/*else if(columnValue.trim().equalsIgnoreCase("y") || columnValue.trim().equalsIgnoreCase("N")){
 				CensusFileUploadController.cellOneErrorMessage = String
 						.valueOf(CensusFileUploadController.cellOneErrorMessage);
-				CensusFileUploadController.cellTwoErrorMessage += "increase condition is not satisfied;";
+				CensusFileUploadController.cellTwoErrorMessage += "employee salary status is wrong.";
 				return null;
-			}
+				
+			}*/
 
 		} else if (XlsxHeader.JobAttribute.getValue().equalsIgnoreCase(columnName)) {
 
 			log.info("jboAttribute");
-			censusForm.setClassification2(columnValue);
+
+			if (columnValue.substring(0, 1).trim().equalsIgnoreCase("e") || columnValue.contains("Executive")) {
+
+				// censusForm.setHourlyOrSalary(" ");
+				censusForm.setClassification2(columnValue);
+
+			} else {
+				
+				/*if(String.valueOf(censusForm.getSalaryIncreaseOrNot()).isEmpty() || 
+						String.valueOf(censusForm.getSalaryIncreaseOrNot()).equalsIgnoreCase("null")){
+					
+					CensusFileUploadController.cellOneErrorMessage = String
+							.valueOf(CensusFileUploadController.cellOneErrorMessage);
+					CensusFileUploadController.cellTwoErrorMessage += "Salary is blank.";
+					return null;
+				}*/
+				
+				if(censusForm.getMin().trim().length()==0){
+					CensusFileUploadController.cellOneErrorMessage = String
+							.valueOf(CensusFileUploadController.cellOneErrorMessage);
+					CensusFileUploadController.cellTwoErrorMessage += "minimum salary is not numeric.";
+					return null;
+					
+				}
+				censusForm.setClassification2(columnValue);
+				/*
+				 * if(censusForm.getHourlyOrSalary().isEmpty()){
+				 * CensusFileUploadController.cellOneErrorMessage = String
+				 * .valueOf(CensusFileUploadController.cellOneErrorMessage);
+				 * CensusFileUploadController.cellTwoErrorMessage +=
+				 * "increase condition is not satisfied;"; return null;
+				 * 
+				 * }
+				 */
+			}
+			
 
 			return censusForm;
 		}
@@ -570,13 +637,13 @@ public class XLSXFormValidation {
 
 			try {
 
-				if (columnValue.isEmpty()) {
+				/*if (columnValue.isEmpty()) {
 					CensusFileUploadController.cellOneErrorMessage = String
 							.valueOf(CensusFileUploadController.cellOneErrorMessage);
 					CensusFileUploadController.cellTwoErrorMessage += "Start date is empty;";
 					return null;
 
-				}
+				}*/
 				censusForm.setCompStartDate(Converters.getParsedDate(columnValue));
 				return censusForm;
 			} catch (ParseException e) {
@@ -620,10 +687,14 @@ public class XLSXFormValidation {
 			censusForm.setAnnaulRate(columnValue);
 
 			return censusForm;
+		}else{
+			
+			return censusForm;
 		}
-		System.out.println("return null value");
+	/*	System.out.println("return null value");
 		System.out.println(columnName + "  at the end...  " + columnValue);
-		return null;
+		return null;*/
+		return censusForm;
 	}
 
 	public static String replaceDotZeros(String columnValue) {

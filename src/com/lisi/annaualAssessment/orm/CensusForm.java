@@ -9,163 +9,163 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "Employee")
 public class CensusForm {
-  
+
 	@Id
 	@Column(name = "EmpClockNumber")
 	private int empClockNumber;
 
-	@Column(name= "EmpLastName")
+	@Column(name = "EmpLastName")
 	private String emplastName;
 
-	@Column(name= "EmpFirstName")
+	@Column(name = "EmpFirstName")
 	private String empfirstName;
 
-	@Column(name= "EmpPSID")
+	@Column(name = "EmpPSID")
 	private String companyPsid; // PSID
 
-	@Column(name="EmpCompany")
+	@Column(name = "EmpCompany")
 	private String company; // location of the company...
 
-	@Column(name= "EmpStatus")
+	@Column(name = "EmpStatus")
 	private String eStatus;
 
-	@Column(name="FactoryLocation")
+	@Column(name = "FactoryLocation")
 	private String factoryLocation;
 
-	@Column(name= "EmpJobTitle")
+	@Column(name = "EmpJobTitle")
 	private String jobTitle;
 
-	@Column(name= "EmpShift")
+	@Column(name = "EmpShift")
 	private int shift;
 
-	@Column(name="PayRole")
+	@Column(name = "PayRole")
 	private String hourlyOrSalary;
-	
-	@Column(name="EmpCostCenterID")
+
+	@Column(name = "EmpCostCenterID")
 	private String costCenter;
 
-	@Column(name= "EmpDOH")
+	@Column(name = "EmpDOH")
 	private Date DOH;
-	
-//	private String classification; // h or s
-	
-	@Column(name= "EmpEmail")
+
+	// private String classification; // h or s
+
+	@Column(name = "EmpEmail")
 	private String empEmailAddress;
-	
+
 	// employee form is completed.
-	
-	@Column(name="SupervisorClock")
+
+	@Column(name = "SupervisorClock")
 	private int supervisorClockNumber;
-	
-	@Column(name="SupervisorFirstName")
+
+	@Column(name = "SupervisorFirstName")
 	private String supervisorFirstName;
-	
-	@Column(name="SupervisorLastName")
+
+	@Column(name = "SupervisorLastName")
 	private String supervisorLasttName;
-	
-	@Column(name="SupervisorCostCenter")
+
+	@Column(name = "SupervisorCostCenter")
 	private String supervisorCostCenter;
-	
+
 	// supervisor form is completed.
-	
-	@Column(name="HRManagerClock")
+
+	@Column(name = "HRManagerClock")
 	private int hrManagerClockNumber;
-	
-	@Column(name="HRManagerFirstName")
+
+	@Column(name = "HRManagerFirstName")
 	private String hrManagerFirstName;
-	
-	@Column(name="HRManagerLastName")
+
+	@Column(name = "HRManagerLastName")
 	private String hrManagerLastName;
-	
-	@Column(name="HRManagerCostCenter")
+
+	@Column(name = "HRManagerCostCenter")
 	private String hrManagerCostCenter;
-	
-	@Column(name="HRGeneralistClockNumber")
+
+	@Column(name = "HRGeneralistClockNumber")
 	private int hrGeneralistClockNumber;
-	
-	@Column(name="HRGeneralistFirstName")
+
+	@Column(name = "HRGeneralistFirstName")
 	private String hrGeneralistFirstName;
-	
-	@Column(name="HRGeneralistLastName")
+
+	@Column(name = "HRGeneralistLastName")
 	private String hrGeneralistLastName;
-	
-	@Column(name="HRGeneralistCostCenter")
+
+	@Column(name = "HRGeneralistCostCenter")
 	private String hrGeneralistCostCenter;
-	
+
 	// hr details completed
-	
-	@Column(name= "MOR")
+
+	@Column(name = "MOR")
 	private String mor;
-	
-	
-	
-	@OneToOne(cascade = CascadeType.ALL)
+
+/*	@OneToOne(cascade = CascadeType.ALL)
 	private Disciplinary disciplinary;
+*/
+	// private String classification;
 
-//	private String classification;
-
-	@Column(name="DisciplinaryDate")
+	@Column(name = "DisciplinaryDate")
 	private Date discDate;
-	
-	@Column(name="DisciplinaryDescription")
+
+	@Column(name = "DisciplinaryDescription")
 	private String disciplinaryDescription;
-	
-	@Column(name="SalaryIncrese")
+
+	@Column(name = "SalaryIncrese")
 	private String salaryIncreaseOrNot;
-	
-	@Column(name="ClassificationTwo")
+
+	@Column(name = "ClassificationTwo")
 	private String classification2;
 
-
-	@Column(name="reasonForCompRecord")
+	@Column(name = "reasonForCompRecord")
 	private String reasonForCompRecord;
-	
-	@Column(name="CompStartDate")
+
+	@Column(name = "CompStartDate")
 	private Date compStartDate;
-	
-	@Column(name="Min")
+
+	@Column(name = "Min")
 	private String min;
-	
-	@Column(name="Max")
+
+	@Column(name = "Max")
 	private String max;
-	
-	@Column(name="Mid")
+
+	@Column(name = "Mid")
 	private String mid;
 
-	@Column(name="PayGrade")
+	@Column(name = "PayGrade")
 	private String payGradeId;
-	
-	@Column(name="CurrentAnnaulRate")
+
+	@Column(name = "CurrentAnnaulRate")
 	private String annaulRate;
-	
-	@Column(name="CurrentlyHourlyRate")
+
+	@Column(name = "CurrentlyHourlyRate")
 	private String currentHrlyRate;
-	
-	@Column(name="exemptNonExempt")
+
+	@Column(name = "exemptNonExempt")
 	private String exemptOrNonExempt;
-	
-	@Column(name="annaulAppraisalYear")
+
+	@Column(name = "annaulAppraisalYear")
 	private String annaulYear;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private String status;
-	
-	@Column(name="completedDate")
+
+	@Column(name = "completedDate")
 	private String completedDate;
-	
-	
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private Hierarchy hierarchy;
-	
 
-	
-	
-	
+	/*private String yellohourlyRate;
+
+	private String yelloAnnaulRate;
+
+	private String percentageIncrease;
+
+	private String greenhourlyRate;
+
+	private String greenAnnaulRate;*/
+
 	public String getStatus() {
 		return status;
 	}
@@ -173,7 +173,6 @@ public class CensusForm {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
 
 	public String getCompletedDate() {
 		return completedDate;
@@ -191,7 +190,6 @@ public class CensusForm {
 		this.annaulRate = annaulRate;
 	}
 
-	
 	public String getAnnaulYear() {
 		return annaulYear;
 	}
@@ -239,8 +237,6 @@ public class CensusForm {
 	public void setReasonForCompRecord(String reasonForCompRecord) {
 		this.reasonForCompRecord = reasonForCompRecord;
 	}
-
-	
 
 	public String getMin() {
 		return min;
@@ -366,13 +362,12 @@ public class CensusForm {
 		this.company = company;
 	}
 
-/*	public String getClassification() {
-		return classification;
-	}
-
-	public void setClassification(String classification) {
-		this.classification = classification;
-	}*/
+	/*
+	 * public String getClassification() { return classification; }
+	 * 
+	 * public void setClassification(String classification) {
+	 * this.classification = classification; }
+	 */
 
 	public String getCostCenter() {
 		return costCenter;
@@ -402,11 +397,6 @@ public class CensusForm {
 		this.empfirstName = empfirstName;
 	}
 
-
-
-
-	
-
 	public String getCompanyPsid() {
 		return companyPsid;
 	}
@@ -422,8 +412,6 @@ public class CensusForm {
 	public void seteStatus(String eStatus) {
 		this.eStatus = eStatus;
 	}
-
-	
 
 	public String getJobTitle() {
 		return jobTitle;
@@ -441,9 +429,6 @@ public class CensusForm {
 		this.shift = shift;
 	}
 
-
-	
-
 	public Date getDOH() {
 		return DOH;
 	}
@@ -452,31 +437,24 @@ public class CensusForm {
 		DOH = dOH;
 	}
 
+	/*
+	 * public String getEmployeementStatus() { return employeementStatus; }
+	 * 
+	 * public void setEmployeementStatus(String employeementStatus) {
+	 * this.employeementStatus = employeementStatus; }
+	 */
 
-
-/*	public String getEmployeementStatus() {
-		return employeementStatus;
-	}
-
-	public void setEmployeementStatus(String employeementStatus) {
-		this.employeementStatus = employeementStatus;
-	}*/
-
-	/*public String getHourlyORSalary() {
-		return hourlyORSalary;
-	}
-
-	public void setHourlyORSalary(String hourlyORSalary) {
-		this.hourlyORSalary = hourlyORSalary;
-	}
-
-	public String getPayGradeId() {
-		return payGradeId;
-	}
-
-	public void setPayGradeId(String payGradeId) {
-		this.payGradeId = payGradeId;
-	}*/
+	/*
+	 * public String getHourlyORSalary() { return hourlyORSalary; }
+	 * 
+	 * public void setHourlyORSalary(String hourlyORSalary) {
+	 * this.hourlyORSalary = hourlyORSalary; }
+	 * 
+	 * public String getPayGradeId() { return payGradeId; }
+	 * 
+	 * public void setPayGradeId(String payGradeId) { this.payGradeId =
+	 * payGradeId; }
+	 */
 
 	public String getMor() {
 		return mor;
@@ -502,7 +480,6 @@ public class CensusForm {
 		this.empEmailAddress = empEmailAddress;
 	}
 
-	
 	public Date getDiscDate() {
 		return discDate;
 	}
@@ -559,9 +536,68 @@ public class CensusForm {
 		this.supervisorLasttName = supervisorLasttName;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "CensusForm [empClockNumber=" + empClockNumber + ", emplastName=" + emplastName + ", empfirstName="
+				+ empfirstName + ", companyPsid=" + companyPsid + ", company=" + company + ", eStatus=" + eStatus
+				+ ", factoryLocation=" + factoryLocation + ", jobTitle=" + jobTitle + ", shift=" + shift
+				+ ", hourlyOrSalary=" + hourlyOrSalary + ", costCenter=" + costCenter + ", DOH=" + DOH
+				+ ", empEmailAddress=" + empEmailAddress + ", supervisorClockNumber=" + supervisorClockNumber
+				+ ", supervisorFirstName=" + supervisorFirstName + ", supervisorLasttName=" + supervisorLasttName
+				+ ", supervisorCostCenter=" + supervisorCostCenter + ", hrManagerClockNumber=" + hrManagerClockNumber
+				+ ", hrManagerFirstName=" + hrManagerFirstName + ", hrManagerLastName=" + hrManagerLastName
+				+ ", hrManagerCostCenter=" + hrManagerCostCenter + ", hrGeneralistClockNumber="
+				+ hrGeneralistClockNumber + ", hrGeneralistFirstName=" + hrGeneralistFirstName
+				+ ", hrGeneralistLastName=" + hrGeneralistLastName + ", hrGeneralistCostCenter="
+				+ hrGeneralistCostCenter + ", mor=" + mor + ", disciplinary="  + ", discDate=" + discDate
+				+ ", disciplinaryDescription=" + disciplinaryDescription + ", salaryIncreaseOrNot="
+				+ salaryIncreaseOrNot + ", classification2=" + classification2 + ", reasonForCompRecord="
+				+ reasonForCompRecord + ", compStartDate=" + compStartDate + ", min=" + min + ", max=" + max + ", mid="
+				+ mid + ", payGradeId=" + payGradeId + ", annaulRate=" + annaulRate + ", currentHrlyRate="
+				+ currentHrlyRate + ", exemptOrNonExempt=" + exemptOrNonExempt + ", annaulYear=" + annaulYear
+				+ ", status=" + status + ", completedDate=" + completedDate + ", hierarchy=" + hierarchy + "]";
+	}
 
-	
+	/*public String getYellohourlyRate() {
+		return yellohourlyRate;
+	}
+
+	public void setYellohourlyRate(String yellohourlyRate) {
+		this.yellohourlyRate = yellohourlyRate;
+	}
+
+	public String getYelloAnnaulRate() {
+		return yelloAnnaulRate;
+	}
+
+	public void setYelloAnnaulRate(String yelloAnnaulRate) {
+		this.yelloAnnaulRate = yelloAnnaulRate;
+	}
+
+	public String getPercentageIncrease() {
+		return percentageIncrease;
+	}
+
+	public void setPercentageIncrease(String percentageIncrease) {
+		this.percentageIncrease = percentageIncrease;
+	}
+
+	public String getGreenhourlyRate() {
+		return greenhourlyRate;
+	}
+
+	public void setGreenhourlyRate(String greenhourlyRate) {
+		this.greenhourlyRate = greenhourlyRate;
+	}
+
+	public String getGreenAnnaulRate() {
+		return greenAnnaulRate;
+	}
+
+	public void setGreenAnnaulRate(String greenAnnaulRate) {
+		this.greenAnnaulRate = greenAnnaulRate;
+	}*/
+
 	
 	
 }

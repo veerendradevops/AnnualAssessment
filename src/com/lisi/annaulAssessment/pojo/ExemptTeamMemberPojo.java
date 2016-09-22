@@ -50,6 +50,18 @@ public class ExemptTeamMemberPojo implements Serializable{
 	private String Section1F3B2;
 	
 	private String AppraisalYear;
+	
+	private String other;
+	
+	
+
+	public String getOther() {
+		return other;
+	}
+
+	public void setOther(String other) {
+		this.other = other;
+	}
 
 	/**
 	 * @return the empClockNumber

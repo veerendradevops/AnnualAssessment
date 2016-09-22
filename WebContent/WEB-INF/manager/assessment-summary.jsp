@@ -35,11 +35,11 @@
                                                 <div class="form-group row">                                                
                                                     <div class="col-sm-6">
                                                     <label>Summary Strengths</label>
-                                                            <textarea class="form-control" id="Comments" maxlength="300" rows="2" name="section2C1">${objData.section2CSummeryStrength}</textarea>
+                                                            <textarea class="form-control" id="Comments" rows="2" cols="100" maxlength="200"  name="section2C1" required>${objData.section2CSummeryStrength}</textarea>
                                                     </div>
                                                     <div class="col-sm-6">
 		                                            <label>Summary of Areas of Improvement</label>
-                                                            <textarea class="form-control" id="Comments" maxlength="300" rows="2" name="section2C2">${objData.section2CSummeryImprovement}</textarea>
+                                                            <textarea class="form-control" id="Comments" rows="2" cols="100" maxlength="200"  name="section2C2" required>${objData.section2CSummeryImprovement}</textarea>
                                                     </div>
                                                         
                                                 </div>
@@ -50,16 +50,21 @@
                                                     <h4 class="header-title">Summary of Accomplishment and Development Areas for Improvement</h4>
                                                     
                                                     <label>General comments about the Team Member overall performance and key accomplishments and needed development for the coming year.</label>
-                                                    <textarea class="form-control" id="Comments" maxlength="300" rows="3" name="Section2D1">${objData.section2DSummeryOfAccomplishmentAndAreasImprovement}</textarea>
+                                                    <textarea class="form-control" id="Comments"  rows="3" cols="100" maxlength="300" name="Section2D1" required>${objData.section2DSummeryOfAccomplishmentAndAreasImprovement}</textarea>
                                                     </div>   
                                                 </div>
                                                 <h4 class="header-title">Overall Rating Per Manager</h4>  
                                                 <div class="form-group row">                                                
                                                     <div class="col-sm-6"><p>Assessment Summary 2015</p>
 														<select class="form-control" id="exampleSelect1" name="section2E1">
-														<option>${section2EAssessmentSummary}</option>
+														
+														<option value="" ${objData.section2EAssessmentSummary==''?'selected':''}>Pick a value</option>
+													<option value="New in the position" ${objData.section2EAssessmentSummary=='New in the position'?'selected':''}>New in the position</option>
+													<option value="too early to decide (seniority < 1 year)" ${objData.section2EAssessmentSummary=='too early to decide (seniority < 1 year)':''}>too early to decide (seniority < 1 year)</option>
+													
+														<%-- <option>${section2EAssessmentSummary}</option>
                                                         <option>New in the position</option>
-                                                        <option>too early to decide (seniority < 1 year)</option>
+                                                        <option>too early to decide (seniority < 1 year)</option> --%>
                                                     </select>
                                                         
                                                     </div>
@@ -67,9 +72,15 @@
                                                     
                                                     <div class="col-sm-6"><p>2015 Assessment compared to 2014</p>
 														<select class="form-control" id="exampleSelect1" name="section2E2">
-                                                       <option>${section2EAssessmentcompared}</option>
+														
+														<option value="" ${objData.section2EAssessmentcompared==''?'selected':''}>Pick a value</option>
+														<option value="Not applicable" ${objData.section2EAssessmentcompared=='Not applicable':''}>Not applicable</option>
+													<option value="New in the position" ${objData.section2EAssessmentcompared=='New in the position'?'selected':''}>New in the position</option>
+													
+														
+                                                      <%--  <option>${section2EAssessmentcompared}</option>
                                                         <option>Not applicable</option>
-                                                        <option>new in the position</option>
+                                                        <option>new in the position</option> --%>
                                                     </select>
                                                                                                
                                                 
@@ -89,11 +100,11 @@
                                                 <div class="form-group row">                                                
                                                     <div class="col-sm-6">
                                                     <label>Summary Strengths</label>
-                                                            <textarea class="form-control" id="Comments" maxlength="300" rows="2" name="section2C1"></textarea>
+                                                            <textarea class="form-control" id="Comments" rows="2" cols="100" maxlength="200" name="section2C1">${objData.section2CSummeryStrength}</textarea>
                                                     </div>
                                                     <div class="col-sm-6">
 		                                            <label>Summary of Areas of Improvement</label>
-                                                            <textarea class="form-control" id="Comments" maxlength="300" rows="2" name="section2C2"></textarea>
+                                                            <textarea class="form-control" id="Comments" rows="2" cols="100" maxlength="200" name="section2C2">${objData.section2CSummeryImprovement}</textarea>
                                                     </div>
                                                         
                                                 </div>
@@ -110,7 +121,8 @@
                                                 <h4 class="header-title">Overall Rating Per Manager</h4>  
                                                 <div class="form-group row">                                                
                                                     <div class="col-sm-6"><p>Assessment Summary 2015</p>
-														<select class="form-control" id="exampleSelect1" name="section2E1">
+														<select class="form-control" id="exampleSelect1" name="section2E1" required>
+														<option>${section2EAssessmentSummary}</option>
                                                         <option>New in the position</option>
                                                         <option>too early to decide (seniority < 1 year)</option>
                                                     </select>
@@ -119,12 +131,12 @@
                                                     
                                                     
                                                     <div class="col-sm-6"><p>2015 Assessment compared to 2014</p>
-														<select class="form-control" id="exampleSelect1" name="section2E2">
+														<select class="form-control" id="exampleSelect1" name="section2E2" required>
+														<option>${section2EAssessmentcompared}</option>
                                                         <option>Not applicable</option>
                                                         <option>new in the position</option>
                                                     </select>
-                                                                                               
-                                                
+
                                                     </div>
                                                 </div>
                                                 

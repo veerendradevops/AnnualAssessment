@@ -17,9 +17,9 @@ public class TMPersonalInformationServiceImpl implements TMPersonalInformationSe
 	private TMPersonalInformationDAO  tMPersonalInformationDAO;
 
 	@Override
-	public List<CensusForm> getEmployeeDetails(String empClockNumber) {
+	public List<CensusForm> getEmployeeDetails(String empClockNumber,String currentYear) {
 		
-		return tMPersonalInformationDAO.getEmployeeDetails(empClockNumber);
+		return tMPersonalInformationDAO.getEmployeeDetails(empClockNumber,currentYear);
 	}
 	
 	

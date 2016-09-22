@@ -8,6 +8,6 @@ public interface TMPersonalInformationService {
 
 	
 	
-	public List<CensusForm> getEmployeeDetails(String empClockNumber);
+	public List<CensusForm> getEmployeeDetails(String empClockNumber,String currentYear);
 
 }

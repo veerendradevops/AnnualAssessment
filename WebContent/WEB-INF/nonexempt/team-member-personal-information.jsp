@@ -1,168 +1,192 @@
+<%@page import="java.util.Date"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page import="com.lisi.annaulAssessment.util.Converters"%>
+<%@ page import="com.lisi.annaulAssessment.controller.LoginController"%>
+
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
 
 
-<body class="fixed-left">
-	<!-- Begin page -->
-	<div id="wrapper">
+	<!-- BEGIN CONTENT -->
+	<div class="page-content-wrapper">
+		<!-- BEGIN CONTENT BODY -->
+		<div class="page-content">
+			<!-- BEGIN PAGE HEADER-->
 
-		<!-- ============================================================== -->
-		<!-- Start right Content here -->
-		<!-- ============================================================== -->
-		<div class="content-page">
-			<!-- Start content -->
-			<div class="content">
-				<div class="container">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="page-title-box">
-								<h4 class="page-title">Team Member Personal Information</h4>
-								<div class="clearfix"></div>
+			<!-- BEGIN PAGE BAR -->
+			<p></p>
+			<p></p>
+			<p></p>
+			<div class="page-bar">
+				<ul class="page-breadcrumb">
+					<li><a href="index.html">Home</a> <i class="fa fa-circle"></i>
+					</li>
+					<li><span>Team Member Personal Information</span></li>
+				</ul>
+			</div>
+			<!-- END PAGE BAR -->
+			<!-- BEGIN PAGE TITLE-->
+			<h3 class="page-title">Team Member Personal Information</h3>
+			<!-- END PAGE TITLE-->
+			<!-- END PAGE HEADER-->
+
+
+
+			<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN VALIDATION STATES-->
+					<div class="portlet light portlet-fit portlet-form bordered">
+
+						<div class="portlet-body">
+							<!-- BEGIN FORM-->
+							<div class="alert alert-success">
+								<strong></strong>
 							</div>
-						</div>
-					</div>
-					<!-- end row -->
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="card-box">
-								<h4 class="header-title">Team Member Personal Information</h4>
-								<form>
-									<c:if test="${!empty employee}">
+							<form:form id="form_sample_3" name="CensusForm"
+								action="interpersonal-skills.do" method="get"
+								modelAttribute="interpersonal" class="form-horizontal">
+								<c:if test="${!empty employee}">
 
-										<c:forEach items="${employee}" var="empDetail">
+									<c:forEach items="${employee}" var="empDetail">
+										<div class="form-body">
 
-
-											<div class="form-group row">
-
-												<div class="col-sm-6">
-													<label>Name:</label> <input type="text" id="pass1"
-														maxlength="200" class="form-control" readonly
-														value=" <c:out value="${empDetail.empfirstName}" />" />
+											<div class="form-group">
+												<label class="control-label col-md-2">Name</label>
+												<div class="col-md-4">
+													<input type="text" id="pass1" maxlength="200"
+														class="form-control"
+														value=" <c:out value="${empDetail.emplastName}"/> <c:out value=", "/><c:out value="${empDetail.empfirstName}"/>"
+														readonly />
 												</div>
-												<div class="col-sm-6">
-													<label>Date of Review:</label>
-													<div class="input-group">
-														<input type="text" class="form-control"
-															placeholder="mm/dd/yyyy" id="datepicker-autoclose">
-														<span class="input-group-addon bg-custom b-0"><i
-															class="icon-calender"></i></span>
-													</div>
-													<!-- input-group -->
-												</div>
-												<div class="col-sm-12">
-													<label>Job Title:</label> <input type="text" id="pass1"
-														maxlength="200" class="form-control"
-														value=" <c:out value="${empDetail.jobTitle}" />" />
-												</div>
-
-												<div class="col-sm-6">
-													<label>Date of Hire:</label>
-													<div class="input-group">
+												<label class="control-label col-md-2">Date of
+													Review:</label>
+												<div class="col-md-4">
+													<div class="input-group date date-picker"
+														data-date-format="mm/dd/yyyy">
 														<input type="text" class="form-control"
 															placeholder="mm/dd/yyyy" id="datepicker-autoclose"
-															value="<c:out value="${empDetail.DOH}" />"> <span
-															class="input-group-addon bg-custom b-0"><i
-															class="icon-calender"></i></span>
+															readonly> <span class="input-group-btn">
+															<button class="btn default" type="button">
+																<i class="fa fa-calendar"></i>
+															</button>
+														</span>
 													</div>
-													<!-- input-group -->
-												</div>
-												<div class="col-sm-6">
-													<label>Department:</label> <input type="text" id="pass2"
-														maxlength="200" class="form-control" />
+													<!-- /input-group -->
 												</div>
 
-												<div class="col-sm-6">
-													<label>Factory/ Division:</label> <input type="text"
-														id="pass2" maxlength="200" class="form-control" />
+
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-2">Job title:</label>
+												<div class="col-md-10">
+													<input type="text" id="pass1" class="form-control"
+														value=" <c:out value="${empDetail.jobTitle}" />" readonly />
+												</div>
+											</div>
+											<div class="form-group">
+
+												<label class="control-label col-md-2">Date of Hire:</label>
+												<c:set var="date" value="${empDetail.DOH}" scope="request"></c:set>
+												<%
+													Date date = (Date) request.getAttribute("date");
+																String formatedDate = Converters.getDateInString(date);
+																
+												%>
+												<div class="col-md-4">
+													<div class="input-group date date-picker"
+														data-date-format="mm/dd/yyyy">
+														<input type="text" class="form-control"
+															placeholder="mm/dd/yyyy" id="datepicker-autoclose"
+															value="<%=formatedDate%>" readonly> <span
+															class="input-group-btn">
+															<button class="btn default" type="button">
+																<i class="fa fa-calendar"></i>
+															</button>
+														</span>
+													</div>
+													<!-- /input-group -->
+												</div>
+												<label class="control-label col-md-2">Department:</label>
+												<div class="col-md-4">
+													<input type="text" id="pass2" maxlength="200"
+														class="form-control" readonly
+														value=" <c:out value="${empDetail.costCenter}" />" />
+												</div>
+
+											</div>
+
+
+											<div class="form-group">
+												<label class="control-label col-md-2">Factory/
+													Division:</label>
+												<div class="col-md-4">
+													<input type="text" id="pass2" maxlength="200"
+														class="form-control" readonly
+														value="${empDetail.factoryLocation }" />
+												</div>
+
+												<label class="control-label col-md-2">Clock Number:</label>
+												<div class="col-md-4">
+
+													<input type="text" class="form-control"
+														value="<c:out value="${empDetail.empClockNumber}"/>"
+														readonly>
 
 												</div>
-												<div class="col-sm-6">
-													<label>Clock Number:</label> <input type="text"
-														class="form-control" readonly>
+											</div>
 
+											<div class="form-group">
+												<label class="control-label col-md-2">Department
+													Manager:</label>
+												<div class="col-md-4">
+													<input type="text" id="pass2" maxlength="200"
+														class="form-control" readonly
+														value=" <c:out value="${empDetail.supervisorLasttName}"/> <c:out value=", "/><c:out value="${empDetail.supervisorFirstName}"/>"
+														
+														/>
 												</div>
-												<div class="col-sm-6">
-													<label>Department Manager:</label> <input type="text"
-														id="pass2" maxlength="200" class="form-control" />
 
-												</div>
-												<div class="col-sm-6">
-													<label>MoR (Manager-once-Removed):</label> <input
-														type="text" id="pass2" maxlength="200"
+												<label class="control-label col-md-2">MoR
+													(Manager-once-Removed):</label>
+												<div class="col-md-4">
+													<input type="text" id="pass2" maxlength="200"
 														class="form-control"
-														value="<c:out value="${empDetail.mor}" />" />
+														value="<c:out value="${empDetail.mor}" />" readonly />
 												</div>
-
 											</div>
 
-											<div class="form-group row col-sm-12 col-xs-12">
-												<input type="submit" value="1 of 10">
-
-											</div>
-											</c:forEach>
-											</c:if>
-								</form>
 
 
-							</div>
+
+
+
+
+
+										</div>
+									</c:forEach>
+								</c:if>
+								<div class="form-actions">
+									<div class="row">
+										<div class="col-md-12">
+											<button type="submit" class="btn green">Next</button>										
+										</div>										
+									</div>
+									<div class="row" align="right">1 of 5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+								</div>
+							</form:form>
+							<!-- END FORM-->
 						</div>
-						<!-- end col-->
+						<!-- END VALIDATION STATES-->
 					</div>
-					<!-- end row -->
 				</div>
-				<!-- container -->
 			</div>
-			<!-- content -->
-
 		</div>
-		<!-- End content-page -->
-
-
-		<!-- ============================================================== -->
-		<!-- End Right content here -->
-		<!-- ============================================================== -->
-
-
-
-
-		<footer class="footer text-right"> 2016 © Lisi Aerospace. </footer>
-
-
+		<!-- END CONTENT BODY -->
 	</div>
-	<!-- END wrapper -->
+	<!-- END CONTENT -->
 
 
-	<script>
-		var resizefunc = [];
-	</script>
-
-	<!-- jQuery  -->
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/tether.min.js"></script>
-	<!-- Tether for Bootstrap -->
-	<script src="assets/js/bootstrap.min.js"></script>
-	<script src="assets/js/detect.js"></script>
-	<script src="assets/js/fastclick.js"></script>
-	<script src="assets/js/jquery.blockUI.js"></script>
-	<script src="assets/js/waves.js"></script>
-	<script src="assets/js/jquery.nicescroll.js"></script>
-	<script src="assets/js/jquery.scrollTo.min.js"></script>
-	<script src="assets/js/jquery.slimscroll.js"></script>
-	<script src="assets/plugins/switchery/switchery.min.js"></script>
-
-	<script src="assets/plugins/moment/moment.js"></script>
-	<script src="assets/plugins/timepicker/bootstrap-timepicker.min.js"></script>
-	<script
-		src="assets/plugins/mjolnic-bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
-	<script
-		src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-	<script src="assets/plugins/clockpicker/bootstrap-clockpicker.js"></script>
-	<script
-		src="assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
-
-	<script src="assets/pages/jquery.form-pickers.init.js"></script>
-
-	<!-- App js -->
-	<script src="assets/js/jquery.core.js"></script>
-	<script src="assets/js/jquery.app.js"></script>
+	<!-- END CONTAINER -->
 </body>

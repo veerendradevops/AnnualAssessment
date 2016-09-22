@@ -36,6 +36,12 @@ public class SkillsSelfAssessment implements Serializable{
 	@Column(name="AppraisalYear")
 	private String appraisalYear;
 
+	
+
+		
+		
+	
+
 	/**
 	 * @return the empClockNumber
 	 */

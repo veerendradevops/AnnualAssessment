@@ -118,7 +118,8 @@ public class CensusFileUploadController {
 				
 				
 				
-				FileOutputStream fileOut = new FileOutputStream("C:/Users/pavan.k/Desktop/details/report-test2.xls");
+		//		FileOutputStream fileOut = new FileOutputStream("C:/Users/pavan.k/Desktop/details/File for Joro 09-20-2016-1.xlsx");
+				FileOutputStream fileOut = new FileOutputStream("C:/report.xls");
 
 				HSSFWorkbook workbook = new HSSFWorkbook();
 				HSSFSheet worksheet = workbook.createSheet("census Report data");
@@ -380,7 +381,7 @@ public class CensusFileUploadController {
 							// censusForm.getEmpClockNumber());
 
 							
-							disciplinary.setDisciplinary(censusForm.getDiscDate());
+						//	disciplinary.setDisciplinary(censusForm.getDiscDate());
 							hierarchy.setApprisalYear(Converters.getCurrentYear());
 
 							// log.info("date : " + censusForm.getDiscDate());
@@ -388,7 +389,7 @@ public class CensusFileUploadController {
 							// log.info("disc " +
 							// censusForm.getDisciplinaryDescription());
 
-							disciplinary.setDisciplinaryDescription(censusForm.getDisciplinaryDescription());
+				//			disciplinary.setDisciplinaryDescription(censusForm.getDisciplinaryDescription());
 
 							uploadFormService.saveEmployeeDetails(censusForm);
 
@@ -407,11 +408,15 @@ public class CensusFileUploadController {
 		//			System.out.println("exception...");
 					// to delete the record from the database..
 
+					System.out.println();
+					
 					for (CensusForm delCensusForm : censusFormList) {
 
 						uploadFormService.deleteEmpDetails(delCensusForm);
 
 					}
+					
+					
 					e.printStackTrace();
 					e.getMessage();
 					System.out.println(e.getMessage());

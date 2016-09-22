@@ -1,6 +1,9 @@
 package com.lisi.annaulAssessment.controller;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import com.lisi.annaulAssessment.pojo.AcknowledgementBean;
 import com.lisi.annaulAssessment.pojo.InterpersonalSkillsBean;
 import com.lisi.annaulAssessment.pojo.JobKnowledgeAndSkillsBean;
 import com.lisi.annaulAssessment.pojo.TrainingAndDevelopmentBean;
+import com.lisi.annaulAssessment.service.ExemptTeamMemberService;
 import com.lisi.annaulAssessment.service.NonExemptEmployeeService;
 import com.lisi.annaulAssessment.util.Converters;
 
@@ -30,21 +34,20 @@ public class NonExemptEmployeesController {
 
 	private static final Logger log = Logger.getLogger(NonExemptEmployeesController.class);
 
-	private static String empClockNumber;
-	private static String annaulYear;
-	private static String loginEmpClock;
+	private String nonexemptEmpClock, employeeYear;
+	
+	@Autowired
+	private ExemptTeamMemberService exemptTeamMemberService;
 
 	@Autowired
 	private NonExemptEmployeeService nonExemptEmployeeService;
 
 	// To get All nonexempt employee list
 	@RequestMapping(value = "/team-members-information", method = RequestMethod.GET)
-	public String getEmployeeList(@RequestParam("clockNum") String loginEmpClock,ModelMap modelMap) {
+	public String getEmployeeList(@RequestParam("clockNum") String loginEmpClock, ModelMap modelMap) {
 		try {
 
-			
-			NonExemptEmployeesController.setLoginEmpClock(loginEmpClock);
-			List<CensusForm> employeeList = nonExemptEmployeeService.getEmployeeList();
+			List<CensusForm> employeeList = nonExemptEmployeeService.getEmployeeList(loginEmpClock);
 
 			modelMap.addAttribute("employee", employeeList);
 		} catch (Exception e) {
@@ -57,16 +60,17 @@ public class NonExemptEmployeesController {
 
 	@RequestMapping(value = "/teamMemberPersonalInformation", method = RequestMethod.GET)
 	public String getList(@RequestParam("clockNum") String clockNumber, @RequestParam("annualYear") String annualYear,
-			Model modelMap) {
+			Model modelMap, HttpSession session) {
 		try {
 
-			NonExemptEmployeesController.setEmpClockNumber(Converters.decrypt(clockNumber));
+			session.setAttribute("nonExempt", Converters.decrypt(clockNumber));
 
-			NonExemptEmployeesController.setAnnaulYear(annualYear);
+			session.setAttribute("nonExemptYear", annualYear);
 
 			String originalValue = Converters.decrypt(clockNumber);
 
-			List<CensusForm> nonExemptList = nonExemptEmployeeService.getNonExemptEmployeeList(originalValue);
+			List<CensusForm> nonExemptList = nonExemptEmployeeService.getNonExemptEmployeeList(originalValue,
+					annualYear);
 
 			modelMap.addAttribute("employee", nonExemptList);
 		} catch (Exception e) {
@@ -78,25 +82,32 @@ public class NonExemptEmployeesController {
 
 	}
 
+	@RequestMapping(value = "/nonExemptPersonalInfo", method = RequestMethod.GET)
+	public String nonExemptPersonalInfo(Model model, HttpSession session) {
+
+		nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+		employeeYear = (String) session.getAttribute("nonExemptYear");
+
+		List<CensusForm> nonExemptList = nonExemptEmployeeService.getNonExemptEmployeeList(nonexemptEmpClock.trim(),
+				employeeYear.trim());
+
+		model.addAttribute("employee", nonExemptList);
+
+		return "teammemberInformation";
+	}
+
 	// to get interpersonal-skills form
 	@RequestMapping(value = "/interpersonal-skills", method = RequestMethod.GET)
-	public String getInterpersonalSkills(Model model) {
+	public String getInterpersonalSkills(Model model, HttpSession session) {
 		try {
 
-			String currentYear = String.valueOf(Converters.getCurrentYear());
+			nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+			employeeYear = (String) session.getAttribute("nonExemptYear");
 
-			if (currentYear.equals(NonExemptEmployeesController.getAnnaulYear())) {
+			List<InterpersonalSkills> interpersonalList = nonExemptEmployeeService
+					.getInterpersonalData(nonexemptEmpClock.trim(), employeeYear);
 
-				List<InterpersonalSkills> interpersonalList = nonExemptEmployeeService
-						.getInterpersonalData(NonExemptEmployeesController.getEmpClockNumber());
-
-				model.addAttribute("interpersonalData", interpersonalList);
-
-			} else {
-
-				model.addAttribute(new InterpersonalSkillsBean());
-
-			}
+			model.addAttribute("interpersonalData", interpersonalList);
 
 		}
 
@@ -107,26 +118,82 @@ public class NonExemptEmployeesController {
 		return "interpersonal-skills";
 	}
 
-	// InterpersonalSkillsBean method
-	@RequestMapping(value = "/interpersonalForm", method = RequestMethod.POST)
+	// InterpersonalSkillsBean method for Next & Save
+	@RequestMapping(value = "/interpersonalForm", params="btnSubmitNextSave", method = RequestMethod.POST)
+	public ModelAndView interPersonalSkillsNextSave(
+			@ModelAttribute("interpersonal") InterpersonalSkillsBean interpersonalSkillsBean, Model model,
+			HttpSession session) {
+
+		InterpersonalSkills interpersonalSkills = new InterpersonalSkills();
+		try{
+			//saving the data
+			saveInterPersonalSkills(interpersonalSkills,interpersonalSkillsBean,model,session);
+			
+			return new ModelAndView("job-knowledge-skills");
+
+		}
+
+		catch (Exception e) {
+
+			model.addAttribute("message", "Your data is not inserted..");
+
+			e.printStackTrace();
+			return new ModelAndView("interpersonal-skills");
+
+		}
+
+	}
+	
+	// InterpersonalSkillsBean method for Back & Save
+		@RequestMapping(value = "/interpersonalForm", params="btnSubmitBackSave", method = RequestMethod.POST)
+		public ModelAndView interPersonalSkillsBackSave(
+				@ModelAttribute("interpersonal") InterpersonalSkillsBean interpersonalSkillsBean, Model model,
+				HttpSession session) {
+
+			InterpersonalSkills interpersonalSkills = new InterpersonalSkills();
+			try{
+				//saving the data
+				saveInterPersonalSkills(interpersonalSkills,interpersonalSkillsBean,model,session);			
+				List<CensusForm> nonExemptList = nonExemptEmployeeService.getNonExemptEmployeeList(session.getAttribute("nonExempt").toString(),
+						session.getAttribute("nonExemptYear").toString());
+
+				model.addAttribute("employee", nonExemptList);
+				return new ModelAndView("teammemberInformation");
+			}
+
+			catch (Exception e) {
+				model.addAttribute("message", "Your data is not inserted..");
+				e.printStackTrace();
+				return new ModelAndView("interpersonal-skills");
+
+			}
+
+		}
+	
+	/*PREVIOUS CODE----*/
+	/*@RequestMapping(value = "/interpersonalForm", method = RequestMethod.POST)
 	public ModelAndView interPersonalSkills(
-			@ModelAttribute("interpersonal") InterpersonalSkillsBean interpersonalSkillsBean, Model model) {
+			@ModelAttribute("interpersonal") InterpersonalSkillsBean interpersonalSkillsBean, Model model,
+			HttpSession session) {
 
 		InterpersonalSkills interpersonalSkills = new InterpersonalSkills();
 
+		nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+		employeeYear = (String) session.getAttribute("nonExemptYear");
+
 		try {
-			List<JobKnowledgeAndSkill> jobKnowledge = nonExemptEmployeeService
-					.getjobknowledgeData(NonExemptEmployeesController.getEmpClockNumber());
+			List<JobKnowledgeAndSkill> jobKnowledge = nonExemptEmployeeService.getjobknowledgeData(nonexemptEmpClock,
+					employeeYear);
 
 			model.addAttribute("jobKnowledgeData", jobKnowledge);
 
-			interpersonalSkills.setClockId(Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()));
+			interpersonalSkills.setClockId(Integer.parseInt(nonexemptEmpClock.trim()));
 
-			String currentYear = NonExemptEmployeesController.getAnnaulYear();
+			String currentYear = employeeYear;
 
 			interpersonalSkills.setAnnualYear(currentYear);
 
-			interpersonalSkills.setResponsibilityScore(interpersonalSkillsBean.getAdaptabilityScore());
+			interpersonalSkills.setResponsibilityScore(interpersonalSkillsBean.getResponsibilityScore());
 			interpersonalSkills.setResponsibilitySupervisorsComments(
 					interpersonalSkillsBean.getResponsibilitySupervisorsComments());
 
@@ -156,10 +223,19 @@ public class NonExemptEmployeesController {
 
 			String ormClass = "InterpersonalSkills";
 
-			String year = nonExemptEmployeeService.getYear(ormClass);
-			nonExemptEmployeeService.addInterpersonalSkillsData(interpersonalSkills, year);
+			String year = nonExemptEmployeeService.getYear(ormClass, nonexemptEmpClock, employeeYear);
+			
 
-			// String year=nonExemptEmployeeService.getYear();
+			System.out.println("befor stated status");
+			if (String.valueOf(year).equals("null") || String.valueOf(year).length()==0) {
+				System.out.println("new record");
+				exemptTeamMemberService.updateCensusForm("Started", nonexemptEmpClock);
+			}
+
+			nonExemptEmployeeService.addInterpersonalSkillsData(interpersonalSkills, year);
+			String avgScore = nonExemptEmployeeService.getInterpersonalAvgScore(nonexemptEmpClock, employeeYear);
+
+			model.addAttribute("avgScore", avgScore);
 
 			return new ModelAndView("job-knowledge-skills");
 
@@ -169,58 +245,118 @@ public class NonExemptEmployeesController {
 
 			model.addAttribute("message", "Your data is not inserted..");
 
-			/*
-			 * nonExemptEmployeeService.deleteEmp(Integer.parseInt(
-			 * NonExemptEmployeesController.getEmpClockNumber()));
-			 */
-
+			e.printStackTrace();
 			return new ModelAndView("interpersonal-skills");
 
 		}
 
-	}
+	}*/
+	
+	
+	
+	
+	public void saveInterPersonalSkills(InterpersonalSkills interpersonalSkills,InterpersonalSkillsBean interpersonalSkillsBean,Model model,
+			HttpSession session) throws Exception
+	{
+		nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+		employeeYear = (String) session.getAttribute("nonExemptYear");
 
-	// log.info("interPersonalSkills() successfully executed");
+			List<JobKnowledgeAndSkill> jobKnowledge = nonExemptEmployeeService.getjobknowledgeData(nonexemptEmpClock,
+					employeeYear);
+
+			model.addAttribute("jobKnowledgeData", jobKnowledge);
+
+			interpersonalSkills.setClockId(Integer.parseInt(nonexemptEmpClock.trim()));
+
+			String currentYear = employeeYear;
+
+			interpersonalSkills.setAnnualYear(currentYear);
+
+			interpersonalSkills.setResponsibilityScore(interpersonalSkillsBean.getResponsibilityScore());
+			interpersonalSkills.setResponsibilitySupervisorsComments(
+					interpersonalSkillsBean.getResponsibilitySupervisorsComments());
+
+			interpersonalSkills.setAdaptabilityScore(interpersonalSkillsBean.getAdaptabilityScore());
+			interpersonalSkills
+					.setAdaptabilitySupervisorsComments(interpersonalSkillsBean.getAdaptabilitySupervisorsComments());
+
+			interpersonalSkills.setInitiativeScore(interpersonalSkillsBean.getInitiativeScore());
+			interpersonalSkills
+					.setInitiativeSupervisorsComments(interpersonalSkillsBean.getInitiativeSupervisorsComments());
+
+			interpersonalSkills.setJudgementScore(interpersonalSkillsBean.getJudgementScore());
+			interpersonalSkills
+					.setJudgementSupervisorsComments(interpersonalSkillsBean.getJudgementSupervisorsComments());
+
+			interpersonalSkills
+					.setWrittenAndOralCommunicationScore(interpersonalSkillsBean.getWrittenAndOralCommunicationScore());
+			interpersonalSkills.setWrittenAndOralCommunicationSupervisorsComments(
+					interpersonalSkillsBean.getWrittenAndOralCommunicationSupervisorsComments());
+
+			interpersonalSkills
+					.setPunctualityAndCommitmentScore(interpersonalSkillsBean.getPunctualityAndCommitmentScore());
+			interpersonalSkills.setPunctualityAndCommitmentSupervisorsComments(
+					interpersonalSkillsBean.getPunctualityAndCommitmentSupervisorsComments());
+
+			interpersonalSkills.setAvgScore(interpersonalSkillsBean.getAvgScore().trim());
+
+			String ormClass = "InterpersonalSkills";
+
+			String year = nonExemptEmployeeService.getYear(ormClass, nonexemptEmpClock, employeeYear);
+			
+
+			System.out.println("befor stated status");
+			if (String.valueOf(year).equals("null") || String.valueOf(year).length()==0) {
+				System.out.println("new record");
+				exemptTeamMemberService.updateCensusForm("Started", nonexemptEmpClock);
+			}
+
+			nonExemptEmployeeService.addInterpersonalSkillsData(interpersonalSkills, year);
+			String avgScore = nonExemptEmployeeService.getInterpersonalAvgScore(nonexemptEmpClock, employeeYear);
+
+			model.addAttribute("avgScore", avgScore);
+
+	}
 
 	// to get job-knowledge-skills form
 	@RequestMapping(value = "job-knowledge-skills")
-	public String getJobKnowledgeSkills(Model model) {
+	public String getJobKnowledgeSkills(Model model, HttpSession session) {
 
 		try {
 			String currentYear = String.valueOf(Converters.getCurrentYear());
+			nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+			employeeYear = (String) session.getAttribute("nonExemptYear");
 
-			if (currentYear.equals(NonExemptEmployeesController.getAnnaulYear())) {
+			List<JobKnowledgeAndSkill> jobKnowledge = nonExemptEmployeeService.getjobknowledgeData(nonexemptEmpClock,
+					employeeYear);
 
-				List<JobKnowledgeAndSkill> jobKnowledge = nonExemptEmployeeService
-						.getjobknowledgeData(NonExemptEmployeesController.getEmpClockNumber());
+			String avgScore = nonExemptEmployeeService.getInterpersonalAvgScore(nonexemptEmpClock, employeeYear);
 
-				model.addAttribute("jobKnowledgeData", jobKnowledge);
+			model.addAttribute("avgScore", avgScore);
+			model.addAttribute("jobKnowledgeData", jobKnowledge);
 
-			} else {
+			log.info("getJobKnowledgeSkills() successfully executed");
 
-				model.addAttribute(new JobKnowledgeAndSkillsBean());
-
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "job-knowledge-skills";
 	}
 
-	// log.info("getJobKnowledgeSkills() successfully executed");
-
 	// JobKnowledgeAndSkillsBean method
 	@RequestMapping(value = "/jobknowledgeForm", method = RequestMethod.POST)
 	public ModelAndView jobKnowledgeAndSkills(@ModelAttribute("jobknowledge") JobKnowledgeAndSkillsBean jkasBean,
-			Model model) {
+			Model model, HttpSession session) {
 
 		JobKnowledgeAndSkill jobKnowledgeAndSkill = new JobKnowledgeAndSkill();
+		nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+		employeeYear = (String) session.getAttribute("nonExemptYear");
 
 		try {
 
-			jobKnowledgeAndSkill.setClockId(Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()));
+			jobKnowledgeAndSkill.setClockId(Integer.parseInt(nonexemptEmpClock.trim()));
 
-			String currentYear = NonExemptEmployeesController.getAnnaulYear();
+			String currentYear = employeeYear.trim();
 
 			jobKnowledgeAndSkill.setAnnualYear(currentYear);
 
@@ -241,11 +377,28 @@ public class NonExemptEmployeesController {
 
 			jobKnowledgeAndSkill.setAvgScore(jkasBean.getAvgScore().trim());
 
+			jobKnowledgeAndSkill.setSummaryAvgScore(jkasBean.getSummaryAvgScore().trim());
+
 			String ormClass = "JobKnowledgeAndSkill";
 
-			String year = nonExemptEmployeeService.getYear(ormClass);
+			String year = nonExemptEmployeeService.getYear(ormClass, nonexemptEmpClock.trim(), employeeYear);
 
 			nonExemptEmployeeService.addJobKnowledgeAndSkillsData(jobKnowledgeAndSkill, year);
+
+			// training and development retrieve screens..
+			try {
+				String presentYear = String.valueOf(Converters.getCurrentYear());
+
+				List<TrainingAndDevelopment> trainingAndDevelopement = nonExemptEmployeeService
+						.getTrainingAndDevelopmentData(nonexemptEmpClock, employeeYear);
+
+				model.addAttribute("trainingAndDevelopement", trainingAndDevelopement);
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
 
 			return new ModelAndView("training-development");
 
@@ -267,106 +420,20 @@ public class NonExemptEmployeesController {
 		}
 
 	}
-	// log.info(jobKnowledgeAndSkills() successfully executed");
-
-	/*
-	 * // to get SummaryOfPerformance form
-	 * 
-	 * @RequestMapping(value = "/summary-of-performance-review") public String
-	 * getNonExemptSummary(Model model) {
-	 * 
-	 * try { String currentYear = String.valueOf(Converters.getDate());
-	 * 
-	 * if (currentYear.equals("2016")) {
-	 * 
-	 * List<SummaryOfPerformanceReview> summaryOfPerformanceReviewList =
-	 * nonExemptEmployeeService
-	 * .getSummaryOfPerformanceReviewData(NonExemptEmployeesController.
-	 * getEmpClockNumber());
-	 * 
-	 * model.addAttribute("summaryOfPerformanceReviewList",
-	 * summaryOfPerformanceReviewList);
-	 * 
-	 * } else {
-	 * 
-	 * model.addAttribute(new SummaryOfPerformanceBean());
-	 * 
-	 * } } catch (Exception e) {
-	 * 
-	 * }
-	 * 
-	 * return "summary-of-performance-review";
-	 * 
-	 * }
-	 * 
-	 * // log.info("getNonExemptSummary() successfully executed");
-	 * 
-	 * // SummaryOfPerformanceBean method
-	 * 
-	 * @RequestMapping(value = "/summaryPerformace", method =
-	 * RequestMethod.POST) public ModelAndView addNonExemptSummaryData(
-	 * 
-	 * @ModelAttribute("summarybean") SummaryOfPerformanceBean nonExemptSummary,
-	 * Model model) {
-	 * 
-	 * SummaryOfPerformanceReview nonExemptSummaryOrm = new
-	 * SummaryOfPerformanceReview(); try {
-	 * 
-	 * nonExemptSummaryOrm.setClockId(Integer.parseInt(
-	 * NonExemptEmployeesController.empClockNumber));
-	 * 
-	 * String currentYear = String.valueOf(Converters.getDate());
-	 * 
-	 * nonExemptSummaryOrm.setAnnualPerformance(currentYear);
-	 * 
-	 * nonExemptSummaryOrm.setSupervisorsOverallComments(nonExemptSummary.
-	 * getSupervisorsOveralComments());
-	 * 
-	 * String str = nonExemptSummaryOrm.getSupervisorsOverallComments();
-	 * System.out.println(str);
-	 * 
-	 * nonExemptEmployeeService.addNonExemptSummaryData(nonExemptSummaryOrm);
-	 * 
-	 * }
-	 * 
-	 * catch (Exception e) {
-	 * 
-	 * String s = "could not insert";
-	 * 
-	 * if (s.contains(e.getMessage())) {
-	 * 
-	 * }
-	 * 
-	 * model.addAttribute("status", "your data not inserted successfully");
-	 * 
-	 * nonExemptEmployeeService.deleteNonExemptSummaryService(
-	 * NonExemptEmployeesController.getEmpClockNumber());
-	 * 
-	 * return new ModelAndView("summary-of-performance-review"); } return new
-	 * ModelAndView("training-development");
-	 * 
-	 * }
-	 */
 
 	@RequestMapping(value = "training-development", method = RequestMethod.GET)
-	public String getNonExemptTrainingorDevelopment(Model model) {
+	public String getNonExemptTrainingorDevelopment(Model model, HttpSession session) {
 
+		nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+		employeeYear = (String) session.getAttribute("nonExemptYear");
 		try {
-			String currentYear = String.valueOf(Converters.getCurrentYear());
+			String presentYear = String.valueOf(Converters.getCurrentYear());
 
-			if (currentYear.equals(NonExemptEmployeesController.getAnnaulYear())) {
+			List<TrainingAndDevelopment> trainingAndDevelopement = nonExemptEmployeeService
+					.getTrainingAndDevelopmentData(nonexemptEmpClock.trim(), employeeYear);
 
-				List<TrainingAndDevelopment> trainingAndDevelopement = nonExemptEmployeeService
-						.getTrainingAndDevelopmentData(NonExemptEmployeesController.getEmpClockNumber());
+			model.addAttribute("trainingAndDevelopement", trainingAndDevelopement);
 
-				model.addAttribute(" trainingAndDevelopement", trainingAndDevelopement);
-				
-				
-			} else {
-				log.info("this is catch block");
-				model.addAttribute(new TrainingAndDevelopmentBean());
-
-			}
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -381,81 +448,104 @@ public class NonExemptEmployeesController {
 	// TrainingAndDevelopementBean method
 	@RequestMapping(value = "/training-developmentForm", method = RequestMethod.POST)
 	public ModelAndView addNonExemptTrainingorDevelopmenData(
-			@ModelAttribute("trainingAndDevelopment") TrainingAndDevelopmentBean trainingAndDevelopmentBean) {
+			@ModelAttribute("trainingAndDevelopment") TrainingAndDevelopmentBean trainingAndDevelopmentBean,
+			HttpSession session) {
 
 		TrainingAndDevelopment trainingAndDevelopement = new TrainingAndDevelopment();
 
-		log.info("/training-developmentForm");
-		try {
-			log.info(trainingAndDevelopmentBean.getFirstAreaorFocus());
+		nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+		employeeYear = (String) session.getAttribute("nonExemptYear");
 
-			trainingAndDevelopement.setClockId(Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()));
+		try {
+
+			trainingAndDevelopement.setClockId(Integer.parseInt(nonexemptEmpClock.trim()));
 
 			trainingAndDevelopement.setFirstAreaorFocus(trainingAndDevelopmentBean.getFirstAreaorFocus());
-			/*
-			 * trainingAndDevelopement.setFirstDateDue(
-			 * trainingAndDevelopmentBean .getFirstDateDue());
-			 */
-			trainingAndDevelopement
-					.setFirstDateDue(Converters.getNonExemptDate((trainingAndDevelopmentBean.getFirstDateDue())));
+
+			if (trainingAndDevelopmentBean.getFirstDateDue().equalsIgnoreCase(",")
+					|| trainingAndDevelopmentBean.getFirstDateDue().isEmpty()) {
+
+			} else {
+
+				trainingAndDevelopement
+						.setFirstDateDue(Converters.getNonExemptDate((trainingAndDevelopmentBean.getFirstDateDue())));
+			}
 
 			trainingAndDevelopement.setfirstTrainingTopic(trainingAndDevelopmentBean.getfirstTrainingTopic());
 			trainingAndDevelopement
 					.setfirstTrainingDescription(trainingAndDevelopmentBean.getfirstTrainingDescription());
 
 			trainingAndDevelopement.setSecondAreaorFocus(trainingAndDevelopmentBean.getSecondAreaorFocus());
-			trainingAndDevelopement
-					.setSecondDateDue(Converters.getNonExemptDate(trainingAndDevelopmentBean.getSecondfDateDue()));
+			if (trainingAndDevelopmentBean.getSecondfDateDue().equalsIgnoreCase(",")
+					|| trainingAndDevelopmentBean.getSecondfDateDue().isEmpty()) {
+
+			} else {
+
+				trainingAndDevelopement
+						.setSecondDateDue(Converters.getNonExemptDate(trainingAndDevelopmentBean.getSecondfDateDue()));
+			}
 
 			trainingAndDevelopement.setSecondTrainingTopic(trainingAndDevelopmentBean.getSecondTrainingTopic());
 			trainingAndDevelopement
 					.setSecondTrainingDescription(trainingAndDevelopmentBean.getSecondTrainingDescription());
 
 			trainingAndDevelopement.setThirdAreaorFocus(trainingAndDevelopmentBean.getThirdAreaorFocus());
-			trainingAndDevelopement
-					.setThirdDateDue(Converters.getNonExemptDate(trainingAndDevelopmentBean.getThirdDateDue()));
+			if (trainingAndDevelopmentBean.getThirdDateDue().equalsIgnoreCase(",")
+					|| trainingAndDevelopmentBean.getThirdDateDue().isEmpty()) {
 
+			} else {
+
+				trainingAndDevelopement
+						.setThirdDateDue(Converters.getNonExemptDate(trainingAndDevelopmentBean.getThirdDateDue()));
+			}
 			trainingAndDevelopement.setThirdTrainingTopic(trainingAndDevelopmentBean.getThirdTrainingTopic());
 			trainingAndDevelopement
 					.setThirdTrainingDescription(trainingAndDevelopmentBean.getThirdTrainingDescription());
-			trainingAndDevelopement.setAnnualYear(NonExemptEmployeesController.getAnnaulYear());
+			trainingAndDevelopement.setAnnualYear(employeeYear.trim());
 
 			String ormClass = "TrainingAndDevelopment";
 
-			String year = nonExemptEmployeeService.getYear(ormClass);
+			String year = nonExemptEmployeeService.getYear(ormClass, nonexemptEmpClock, employeeYear);
+			
+			if (String.valueOf(year).equals("null") || String.valueOf(year).length()==0) {
+
+				exemptTeamMemberService.updateCensusForm("Completed", nonexemptEmpClock);
+				
+			} else {
+		//		year = Integer.parseInt(Converters.getCurrentYear());
+			}
 
 			nonExemptEmployeeService.addNonExemptTrainingorDevelopmenData(trainingAndDevelopement, year);
+
+			log.info("addNonExemptSummaryData() successfully executed");
 
 		}
 
 		catch (Exception e) {
+			e.printStackTrace();
 			return new ModelAndView("training-development");
 		}
-		return new ModelAndView("acknowledgment-section");
+		//return new ModelAndView("acknowledgment-section");
+		//only submit and redirect to dashboard
+		return new ModelAndView("redirect:/back.do");
 
 	}
 
-	// log.info("addNonExemptSummaryData() successfully executed");
-
 	// To get NonExemptacknowledgment form
 	@RequestMapping(value = "acknowledgment-section")
-	public String getNonExemptAcknowledgmentSection(Model model) {
+	public String getNonExemptAcknowledgmentSection(Model model, HttpSession session) {
 
 		try {
 			String currentYear = String.valueOf(Converters.getCurrentYear());
 
-			if (currentYear.equals(NonExemptEmployeesController.getAnnaulYear())) {
+			nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+			employeeYear = (String) session.getAttribute("nonExemptYear");
 
-				List<AcknowledgmentSection> acknowledgement = nonExemptEmployeeService
-						.getAcknowledgementData(NonExemptEmployeesController.getEmpClockNumber());
+			List<AcknowledgmentSection> acknowledgement = nonExemptEmployeeService
+					.getAcknowledgementData(nonexemptEmpClock.trim(), employeeYear.trim());
 
-				model.addAttribute("acknowledgement", acknowledgement);
+			model.addAttribute("acknowledgement", acknowledgement);
 
-			} else {
-
-				model.addAttribute(new AcknowledgementBean());
-
-			}
 		} catch (Exception e) {
 
 		}
@@ -465,15 +555,17 @@ public class NonExemptEmployeesController {
 	// AcknowledgementBean method
 	@RequestMapping(value = "/acknowledgment-section", method = RequestMethod.POST)
 	public String addNonExemptAcknowledgmentSectionData(
-			@ModelAttribute("acknowledgment") AcknowledgementBean acknowledgementBean, Model model) {
+			@ModelAttribute("acknowledgment") AcknowledgementBean acknowledgementBean, Model model,
+			HttpSession session) {
 
 		AcknowledgmentSection acknowledgmentSection = new AcknowledgmentSection();
 
 		try {
-
+			nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+			employeeYear = (String) session.getAttribute("nonExemptYear");
 			String currentYear = String.valueOf(Converters.getCurrentYear());
 
-			acknowledgmentSection.setClockId(Integer.parseInt(NonExemptEmployeesController.getEmpClockNumber()));
+			acknowledgmentSection.setClockId(Integer.parseInt(nonexemptEmpClock.trim()));
 			acknowledgmentSection.setAnnualYear(currentYear);
 			acknowledgmentSection.setTeamMembersComments(acknowledgementBean.getTeamMembersComments());
 
@@ -483,93 +575,37 @@ public class NonExemptEmployeesController {
 
 			model.addAttribute("status", "your data not inserted successfully");
 
-			nonExemptEmployeeService.deleteAcknowledgmentSectionData(NonExemptEmployeesController.getEmpClockNumber());
+			// nonExemptEmployeeService.deleteAcknowledgmentSectionData(NonExemptEmployeesController.getEmpClockNumber());
+
 			return "acknowledgment-section";
 		}
 		return "training-development";
 
 	}
 
-	// ===============================================================================================================================
-	/*
-	 * // To get TrainingAndDevelopement form
-	 * 
-	 * @RequestMapping(value = "training-development", method =
-	 * RequestMethod.GET) public String getNonExemptTrainingorDevelopment(Model
-	 * model) { model.addAttribute(new TrainingAndDevelopmentBean()); return
-	 * "training-development"; }
-	 * 
-	 * // TrainingAndDevelopementBean method
-	 * 
-	 * @RequestMapping(value = "/training-developmentForm", method =
-	 * RequestMethod.POST) public ModelAndView
-	 * addNonExemptTrainingorDevelopmenData(
-	 * 
-	 * @ModelAttribute("trainingAndDevelopment") TrainingAndDevelopmentBean
-	 * trainingAndDevelopmentBean, HttpServletRequest request) {
-	 * 
-	 * TrainingAndDevelopment trainingAndDevelopement = new
-	 * TrainingAndDevelopment();
-	 * 
-	 * try {
-	 * 
-	 * trainingAndDevelopement.setFirstAreaorFocus(trainingAndDevelopmentBean.
-	 * getFirstAreaorFocus());
-	 * trainingAndDevelopement.setFirstDateDue(trainingAndDevelopmentBean.
-	 * getFirstDateDue()); trainingAndDevelopement.setFirstMethodofTraining(
-	 * trainingAndDevelopmentBean.getFirstMethodofTraining());
-	 * 
-	 * trainingAndDevelopement.setSecondAreaorFocus(trainingAndDevelopmentBean.
-	 * getSecondAreaorFocus());
-	 * trainingAndDevelopement.setSecondfDateDue(trainingAndDevelopmentBean.
-	 * getSecondfDateDue()); trainingAndDevelopement.setSecondMethodofTraining(
-	 * trainingAndDevelopmentBean.getSecondMethodofTraining());
-	 * 
-	 * trainingAndDevelopement.setThirdAreaorFocus(trainingAndDevelopmentBean.
-	 * getThirdAreaorFocus());
-	 * trainingAndDevelopement.setThirdDateDue(trainingAndDevelopmentBean.
-	 * getThirdDateDue()); trainingAndDevelopement.setThirdMethodofTraining(
-	 * trainingAndDevelopmentBean.getThirdMethodofTraining());
-	 * 
-	 * nonExemptEmployeeService.addNonExemptTrainingorDevelopmenData(
-	 * trainingAndDevelopement);
-	 * 
-	 * }
-	 * 
-	 * catch (Exception e) { return new ModelAndView("training-development"); }
-	 * return new ModelAndView("...");
-	 * 
-	 * }
-	 */
+	@RequestMapping(value = "/nonteam-members-information", method = RequestMethod.GET)
+	public String getNonExemptEmployee(Model modelMap, HttpSession session) {
+		try {
 
-	public static String getEmpClockNumber() {
-		return empClockNumber;
+			nonexemptEmpClock = (String) session.getAttribute("nonExempt");
+			employeeYear = (String) session.getAttribute("nonExemptYear");
+
+			List<CensusForm> nonExemptList = nonExemptEmployeeService.getNonExemptEmployeeList(nonexemptEmpClock.trim(),
+					employeeYear);
+
+			for (CensusForm c : nonExemptList) {
+				System.out.println("if");
+				System.out.println(c.getDOH());
+			}
+
+			modelMap.addAttribute("employee", nonExemptList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		log.info("getList() successfully executed");
+
+		return "teammemberInformation";
+
 	}
 
-	public static void setEmpClockNumber(String empClockNumber) {
-		NonExemptEmployeesController.empClockNumber = empClockNumber;
-	}
-
-	public static String getAnnaulYear() {
-		return annaulYear;
-	}
-
-	public static void setAnnaulYear(String annaulYear) {
-		NonExemptEmployeesController.annaulYear = annaulYear;
-	}
-	/*
-	 * public static int getYear(){ int year=nonExemptEmployeeService.getYear();
-	 * return year; }
-	 */
-
-	public static String getLoginEmpClock() {
-		return loginEmpClock;
-	}
-
-	public static void setLoginEmpClock(String loginEmpClock) {
-		NonExemptEmployeesController.loginEmpClock = loginEmpClock;
-	}
-	
-	
-	
 }

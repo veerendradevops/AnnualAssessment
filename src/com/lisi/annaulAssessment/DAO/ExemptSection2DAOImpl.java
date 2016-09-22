@@ -28,24 +28,35 @@ public class ExemptSection2DAOImpl implements ExemptSection2DAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	public String insertExemptSection2() {
+	public String insertExemptSection2(ExemptSection2 exemptorm) {
 		String year = null;
 		String statement = "from ExemptSection2 where empClockNumber=? and appraisalYear=?";
+		/*
+		 * Query query =
+		 * sessionFactory.getCurrentSession().createQuery(statement);
+		 * query.setInteger(0,
+		 * Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
+		 * 
+		 * query.setInteger(1, Integer.parseInt(Converters.getCurrentYear()));
+		 * 
+		 * List<ExemptSection2> fetchYear = query.list();
+		 */
 		Query query = sessionFactory.getCurrentSession().createQuery(statement);
-		query.setInteger(0, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
+		query.setInteger(0, exemptorm.getEmpClockNumber());
 
-		query.setInteger(1, Integer.parseInt(Converters.getCurrentYear()));
+		query.setInteger(1, Integer.parseInt(exemptorm.getAppraisalYear()));
 
-		List<ExemptSection2> fetchYear = query.list();
+		ExemptSection2 es2 = (ExemptSection2) query.uniqueResult();
 
-		for (ExemptSection2 es2 : fetchYear) {
+		
 
-			log.info(es2.getAppraisalYear());
+		if (String.valueOf(es2).equals("null")) {
 
-			year = es2.getAppraisalYear();
-
+			return "";
 		}
-		return year;
+
+		
+		return es2.getAppraisalYear();
 	}
 
 	@Override
@@ -73,8 +84,8 @@ public class ExemptSection2DAOImpl implements ExemptSection2DAO {
 				query.setString(8, es.getSection2A5Objective());
 				query.setInteger(9, es.getSection2A5Level());
 				query.setString(10, es.getSection2AdditionalComments());
-				query.setInteger(11, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-				query.setString(12, Converters.getCurrentYear());
+				query.setInteger(11, es.getEmpClockNumber());
+				query.setString(12, es.getAppraisalYear());
 				query.executeUpdate();
 			} else {
 				sessionFactory.getCurrentSession().save(es);
@@ -86,116 +97,120 @@ public class ExemptSection2DAOImpl implements ExemptSection2DAO {
 			System.out.println(e.getMessage());
 		}
 	}
+
 	// Logic for retrieving Objectachievement data
-	public void retriveAssessmentSummaryDatalogic(ExemptSection2 es,String year){
+	public void retriveAssessmentSummaryDatalogic(ExemptSection2 es, String year) {
 		log.info("retriveAssessmentSummaryDataLogic");
-		try{
+		try {
 			if (String.valueOf(year).equals(Converters.getCurrentYear())) {
-				String statement="update ExemptSection2  set section2CSummeryStrength=?,section2CSummeryImprovement=? where empClockNumber=? and appraisalYear=?";
-				Query query=sessionFactory.getCurrentSession().createQuery(statement);
-				query.setString(0,es.getSection2CSummeryStrength());
-				query.setString(1,es.getSection2CSummeryImprovement());
-				query.setInteger(3,Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-				query.setString(4, Converters.getCurrentYear());
+				String statement = "update ExemptSection2  set section2CSummeryStrength=?,section2CSummeryImprovement=? where empClockNumber=? and appraisalYear=?";
+				Query query = sessionFactory.getCurrentSession().createQuery(statement);
+				query.setString(0, es.getSection2CSummeryStrength());
+				query.setString(1, es.getSection2CSummeryImprovement());
+				query.setInteger(3, es.getEmpClockNumber());
+				query.setString(4, es.getAppraisalYear().trim());
 				query.executeUpdate();
-			}else{
+			} else {
 				sessionFactory.getCurrentSession().save(es);
-				
+
 			}
-		}catch(Exception e){
-			
+		} catch (Exception e) {
+
 		}
 	}
-	
+
 	@Override
-	public void fillExemptSection3(ExemptSection2 es) {
+	public void fillExemptSection3(ExemptSection2 es, String year) {
 
-		String statement = "update ExemptSection2  set section2B1=? , section2B2=?,section2B3=? where empClockNumber=? and appraisalYear=? ";
+		if (year.equalsIgnoreCase(Converters.getCurrentYear())) {
 
-		Query query = sessionFactory.getCurrentSession().createQuery(statement);
+			System.out.println(year);
+			String statement = "update ExemptSection2  set section2B1=? , section2B2=?,section2B3=? where empClockNumber=? and appraisalYear=? ";
 
-		query.setString(0, es.getSection2B1());
+			Query query = sessionFactory.getCurrentSession().createQuery(statement);
 
-		query.setString(1, es.getSection2B2());
+			query.setString(0, es.getSection2B1());
 
-		query.setString(2, es.getSection2B3());
+			query.setString(1, es.getSection2B2());
 
-		query.setInteger(3, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
+			query.setString(2, es.getSection2B3());
 
-		query.setInteger(4, Integer.parseInt(Converters.getCurrentYear()));
+			query.setInteger(3, es.getEmpClockNumber());
 
-		query.executeUpdate();
+			query.setInteger(4, Integer.parseInt(es.getAppraisalYear()));
+
+			query.executeUpdate();
+		} else {
+System.out.println("dao else");
+			sessionFactory.getCurrentSession().save(es);
+		}
 	}
 
 	// Logic for retrieving Objectachievement data
 	@Override
-	public List<ExemptSection2> retriveObjectAchievementData() {
+	public List<ExemptSection2> retriveObjectAchievementData(String clockNumber, String year) {
 
 		String statement = "from ExemptSection2 where empClockNumber=? and appraisalYear=? ";
 		Query query = sessionFactory.getCurrentSession().createQuery(statement);
 
-		query.setInteger(0, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
+		query.setInteger(0, Integer.parseInt(clockNumber.trim()));
 
-		query.setInteger(1, Integer.parseInt(Converters.getCurrentYear()));
+		query.setInteger(1, Integer.parseInt(year.trim()));
 
 		return (List<ExemptSection2>) query.list();
 	}
-	//Logic for retrieving AssessmentSummaryData
+
+	// Logic for retrieving AssessmentSummaryData
 	@Override
-	public List<ExemptSection2> retriveAssessmentSummaryData() {
+	public List<ExemptSection2> retriveAssessmentSummaryData(ExemptSection2 exemptorm) {
 		String statement = "from ExemptSection2 where empClockNumber=? and appraisalYear=? ";
 		Query query = sessionFactory.getCurrentSession().createQuery(statement);
-		query.setInteger(0, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-		query.setInteger(1,Integer.parseInt(Converters.getCurrentYear()));
-		
-		return (List<ExemptSection2>) query.list();
-	}
-
-	@Override
-	public List<ExemptSection2> retriveManagerSkillsAssessmentData() {
-		String statement = "from ExemptSection2 where empClockNumber=? and appraisalYear=? ";
-		Query query = sessionFactory.getCurrentSession().createQuery(statement);
-
-		query.setInteger(0, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-
-		query.setString(1, ExemptEmployeeController.getAnnaylYear());
+		query.setInteger(0, exemptorm.getEmpClockNumber());
+		query.setInteger(1, Integer.parseInt(exemptorm.getAppraisalYear()));
 
 		return (List<ExemptSection2>) query.list();
 	}
 
 	@Override
-	public void fillAssessmentSummary(ExemptSection2 es,String year) {
-		
+	public List<ExemptSection2> retriveManagerSkillsAssessmentData(String empClock,String year) {
+		String statement = "from ExemptSection2 where empClockNumber=? and appraisalYear=? ";
+		Query query = sessionFactory.getCurrentSession().createQuery(statement);
+
+		query.setInteger(0, Integer.parseInt(empClock.trim()));
+
+		query.setString(1, year.trim());
+
+		return (List<ExemptSection2>) query.list();
+	}
+
+	@Override
+	public void fillAssessmentSummary(ExemptSection2 es, String year) {
+
 		System.out.println("fill assessment summary dao");
 		log.info(es.getSection2CSummeryStrength() + " : " + es.getSection2CSummeryImprovement());
 		log.info(year);
 		log.info(Converters.getCurrentYear());
-		
+
 		if (String.valueOf(year).equals(Converters.getCurrentYear())) {
 			log.info("fillassessmentSummary If Condition");
-			String statement="update ExemptSection2  set section2CSummeryStrength=?,section2CSummeryImprovement=?,section2DSummeryOfAccomplishmentAndAreasImprovement=?,section2EAssessmentSummary=?,section2EAssessmentcompared=? where empClockNumber=? and appraisalYear=?";
+			String statement = "update ExemptSection2  set section2CSummeryStrength=?,section2CSummeryImprovement=?,section2DSummeryOfAccomplishmentAndAreasImprovement=?,section2EAssessmentSummary=?,section2EAssessmentcompared=? where empClockNumber=? and appraisalYear=?";
 			Query query = sessionFactory.getCurrentSession().createQuery(statement);
 			query.setString(0, es.getSection2CSummeryStrength());
 			query.setString(1, es.getSection2CSummeryImprovement());
-			
+
 			query.setString(2, es.getSection2DSummeryOfAccomplishmentAndAreasImprovement());
 			query.setString(3, es.getSection2EAssessmentSummary());
 			query.setString(4, es.getSection2EAssessmentcompared());
-			query.setInteger(5, Integer.parseInt(ExemptEmployeeController.getClockNumber().trim()));
-			query.setString(6, Converters.getCurrentYear());
-			int result=query.executeUpdate();
+			query.setInteger(5, es.getEmpClockNumber());
+			query.setString(6, es.getAppraisalYear().trim());
+			int result = query.executeUpdate();
 			log.info(result + " result");
-		}
-		else{
+		} else {
 			System.out.println("else condition");
 			sessionFactory.getCurrentSession().save(es);
 		}
 		System.out.println("dao impl " + es);
-		
-	}
 
-	
-	
-	
+	}
 
 }

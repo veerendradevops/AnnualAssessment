@@ -1,202 +1,205 @@
+<%@page import="java.util.Date"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="com.lisi.annaulAssessment.util.Converters"%>
+<%@ page import="com.lisi.annaulAssessment.controller.LoginController"%>
 
-    <body class="fixed-left">
-        <!-- Begin page -->
-        <div id="wrapper">
-            
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
-            <div class="content-page">
-                <!-- Start content -->
-                <div class="content">
-                    <div class="container">
-                        <div class="row">
-							<div class="col-xs-12">
-								<div class="page-title-box">
-                                    <h4 class="page-title">Team Member Personal Information</h4>
-                                    <div class="clearfix"></div>
-                                </div>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+
+
+	<!-- BEGIN CONTENT -->
+	<div class="page-content-wrapper">
+		<!-- BEGIN CONTENT BODY -->
+		<div class="page-content">
+			<!-- BEGIN PAGE HEADER-->
+
+			<!-- BEGIN PAGE BAR -->
+			<p></p>
+			<p></p>
+			<p></p>
+			<div class="page-bar">
+				<ul class="page-breadcrumb">
+					<li><a href="index.html">Home</a> <i class="fa fa-circle"></i>
+					</li>
+					<li><span>Team Member Personal Information</span></li>
+				</ul>
+			</div>
+			<!-- END PAGE BAR -->
+			<!-- BEGIN PAGE TITLE-->
+			<h3 class="page-title">Team Member Personal Information</h3>
+			<!-- END PAGE TITLE-->
+			<!-- END PAGE HEADER-->
+
+
+
+			<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN VALIDATION STATES-->
+					<div class="portlet light portlet-fit portlet-form bordered">
+
+						<div class="portlet-body">
+							<!-- BEGIN FORM-->
+							<div class="alert alert-success">
+								<strong></strong>
 							</div>
+							<form:form id="form_sample_3" name="CensusForm"
+								action="/AnnaulAssessmenT/reviewOfPastYear.do" method="GET"
+								modelAttribute="exemptTeamMember" class="form-horizontal">
+								<c:if test="${!empty employeeDetails}">
+
+									<c:forEach items="${employeeDetails}" var="empDetail">
+										<div class="form-body">
+
+											<div class="form-group">
+												<label class="control-label col-md-2">Name</label>
+												<div class="col-md-4">
+													<input type="text" id="pass1" maxlength="200"
+														class="form-control"
+														value=" <c:out value="${empDetail.emplastName}"/> <c:out value=", "/><c:out value="${empDetail.empfirstName}"/>"
+														readonly />
+												</div>
+												<label class="control-label col-md-2">Date of
+													Review:</label>
+												<div class="col-md-4">
+													<div class="input-group date date-picker"
+														data-date-format="mm/dd/yyyy">
+														<input type="text" class="form-control"
+															placeholder="mm/dd/yyyy" id="datepicker-autoclose"
+															readonly> <span class="input-group-btn">
+															<button class="btn default" type="button">
+																<i class="fa fa-calendar"></i>
+															</button>
+														</span>
+													</div>
+													<!-- /input-group -->
+												</div>
+
+
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-2">Job title:</label>
+												<div class="col-md-10">
+													<input type="text" id="pass1" class="form-control"
+														value=" <c:out value="${empDetail.jobTitle}" />" readonly />
+												</div>
+											</div>
+											<div class="form-group">
+
+												<label class="control-label col-md-2">Date of Hire:</label>
+												<c:set var="date" value="${empDetail.DOH}" scope="request"></c:set>
+												<%
+													Date date = (Date) request.getAttribute("date");
+																String formatedDate = Converters.getDateInString(date);
+																System.out.println("formatedDate jsp" + formatedDate);
+												%>
+												<div class="col-md-4">
+													<div class="input-group date date-picker"
+														data-date-format="mm/dd/yyyy">
+														<input type="text" class="form-control"
+															placeholder="mm/dd/yyyy" id="datepicker-autoclose"
+															value="<%=formatedDate%>" readonly> <span
+															class="input-group-btn">
+															<button class="btn default" type="button">
+																<i class="fa fa-calendar"></i>
+															</button>
+														</span>
+													</div>
+													<!-- /input-group -->
+												</div>
+												<label class="control-label col-md-2">Department:</label>
+												<div class="col-md-4">
+													<input type="text" id="pass2" maxlength="200"
+														class="form-control" readonly
+														value=" <c:out value="${empDetail.costCenter}" />" />
+												</div>
+
+											</div>
+
+
+											<div class="form-group">
+												<label class="control-label col-md-2">Factory:</label>
+												<div class="col-md-4">
+													<input type="text" id="pass2" maxlength="200"
+														class="form-control" readonly
+														value="${empDetail.factoryLocation }" />
+												</div>
+
+												<label class="control-label col-md-2">Clock Number:</label>
+												<div class="col-md-4">
+
+													<input type="text" class="form-control"
+														value="<c:out value="${empDetail.empClockNumber}"/>"
+														readonly>
+
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2">Department
+													Manager:</label>
+												<div class="col-md-4">
+													<input type="text" id="pass2" maxlength="200"
+														class="form-control" readonly
+														value=" <c:out value="${empDetail.supervisorLasttName}"/> <c:out value=", "/><c:out value="${empDetail.supervisorFirstName}"/>"
+														
+														 />
+												</div>
+
+												<label class="control-label col-md-2">MoR
+													(Manager-once-Removed):</label>
+												<div class="col-md-4">
+													<input type="text" id="pass2" maxlength="200"
+														class="form-control"
+														value="<c:out value="${empDetail.mor}" />" readonly />
+												</div>
+											</div>
+
+
+
+
+
+
+
+
+										</div>
+									</c:forEach>
+								</c:if>
+								<div class="form-actions">
+									<div class="row">
+										<div class="col-md-12">
+											 <%
+												String statusMssg =(String)session.getAttribute("loginEmployeeStatus");
+
+													if (String.valueOf(statusMssg).equalsIgnoreCase("started")) {
+											%> 
+											<button type="submit" class="btn green">Next</button>
+											<div class="row" align="right">1 of 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+											<%
+												}else{
+													
+												
+											%> 
+											
+											<%
+												}
+											%>
+										</div>
+									</div>
+								</div>
+							</form:form>
+							<!-- END FORM-->
 						</div>
-                        <!-- end row -->
-                        <div class="row">                        
-                            <div class="col-xs-12">
-                                <div class="card-box">
-								<h4 class="header-title">Team Member Personal Information</h4>                                    
-                                           
-                                               <form:form id="CensusForm"
-									name="CensusForm"
-									action="/AnnaulAssessmenT/reviewOfPastYear.do" 
-									method="GET" modelAttribute="exemptTeamMember">
-                                           
-                                                  
-                                                 <c:if test="${!empty employeeDetails}">
-
-										<c:forEach items="${employeeDetails}" var="empDetail">       
-                                                        
-                                                <div class="form-group row">                                                   
-                                                    
-                                                    <div class="col-sm-6">
-                                                    <label>Name:</label>
-                                                    <input type="text" id="pass1" maxlength="200" class="form-control" value=" <c:out value="${empDetail.empfirstName}"/>" readonly/>
-                                                    </div>
-                                                    <div class="col-sm-6">
-		                                            <label>Date of Review:</label>
-                                                    <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="mm/dd/yyyy" id="datepicker-autoclose" readonly>
-                                                                        <span class="input-group-addon bg-custom b-0"><i class="icon-calender"></i></span>
-                                                                    </div><!-- input-group -->
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                    <label>Job Title:</label>
-                                                    <input type="text" id="pass1" class="form-control" value=" <c:out value="${empDetail.jobTitle}" />" readonly/>
-                                                    </div>
-                                                    
-                                                    <div class="col-sm-6">
-                                                    <label>Date of Hire:</label>
-                                                    <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="mm/dd/yyyy" id="datepicker-autoclose" value="<c:out value="${empDetail.DOH}"/>" readonly>
-                                                                        <span class="input-group-addon bg-custom b-0"><i class="icon-calender"></i></span>
-                                                                    </div><!-- input-group -->
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                    <label>Department:</label>
-                                                    <input type="text" id="pass2" maxlength="200" class="form-control" readonly/>
-                                                    </div>  
-                                                    
-                                                    <div class="col-sm-6">
-                                                    <label>Factory/ Division:</label>
-                                                    <input type="text" id="pass2" maxlength="200" class="form-control" readonly/>
-                                                    
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                    <label>Clock Number:</label>
-                                                    <input type="text" class="form-control" value="<c:out value="${empDetail.empClockNumber}"/>" readonly>
-                                                                        
-                                                    </div> 
-                                                     <div class="col-sm-6">
-                                                    <label>Department Manager:</label>
-                                                    <input type="text" id="pass2" maxlength="200" class="form-control" readonly/>
-                                                    
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                    <label>MoR (Manager-once-Removed):</label>
-                                                    <input type="text" id="pass2" maxlength="200" class="form-control" value="<c:out value="${empDetail.mor}" />" readonly/>
-                                                    </div> 
-                                                        
-                                                </div>
-                                                
-                                    <!--  <div class="form-group row col-sm-12 col-xs-12">
-						<a href="review-of-2015-year.html" class="btn btn-secondary m-l-5">1 of 10</a>
-          									
-                                  		</div> -->
-                                  		
-                                  			<div class="form-group row col-sm-12 col-xs-12">
-                                     <button type="submit" class="btn btn-primary  waves-light">1 of 10</button>
-          									
-                                  		</div>
-                                  		
-                                  		</c:forEach>
-									</c:if>
-                                  		
-                                     <%-- <c:if test="${empty employeeDetails}">
-                                  		
-                                  		 <div class="form-group row">                                                   
-                                                    
-                                                    <div class="col-sm-6">
-                                                    <label>Name:</label>
-                                                    <input type="text" id="pass1" maxlength="200" class="form-control" value=" <c:out value="${empDetail.empfirstName}"/>" readonly/>
-                                                    </div>
-                                                    <div class="col-sm-6">
-		                                            <label>Date of Review:</label>
-                                                    <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="mm/dd/yyyy" id="datepicker-autoclose" readonly>
-                                                                        <span class="input-group-addon bg-custom b-0"><i class="icon-calender"></i></span>
-                                                                    </div><!-- input-group -->
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                    <label>Job Title:</label>
-                                                    <input type="text" id="pass1" class="form-control" value=" <c:out value="${empDetail.jobTitle}" />" readonly/>
-                                                    </div>
-                                                    
-                                                    <div class="col-sm-6">
-                                                    <label>Date of Hire:</label>
-                                                    <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="mm/dd/yyyy" id="datepicker-autoclose" value="<c:out value="${empDetail.DOH}"/>" readonly>
-                                                                        <span class="input-group-addon bg-custom b-0"><i class="icon-calender"></i></span>
-                                                                    </div><!-- input-group -->
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                    <label>Department:</label>
-                                                    <input type="text" id="pass2" maxlength="200" class="form-control" readonly/>
-                                                    </div>  
-                                                    
-                                                    <div class="col-sm-6">
-                                                    <label>Factory/ Division:</label>
-                                                    <input type="text" id="pass2" maxlength="200" class="form-control" readonly/>
-                                                    
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                    <label>Clock Number:</label>
-                                                    <input type="text" class="form-control" value="<c:out value="${empDetail.empClockNumber}"/>" readonly>
-                                                                        
-                                                    </div> 
-                                                     <div class="col-sm-6">
-                                                    <label>Department Manager:</label>
-                                                    <input type="text" id="pass2" maxlength="200" class="form-control" readonly/>
-                                                    
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                    <label>MoR (Manager-once-Removed):</label>
-                                                    <input type="text" id="pass2" maxlength="200" class="form-control" value="<c:out value="${empDetail.mor}" />" readonly/>
-                                                    </div> 
-                                                        
-                                                </div>
-                                                
-                                    <!--  <div class="form-group row col-sm-12 col-xs-12">
-						<a href="review-of-2015-year.html" class="btn btn-secondary m-l-5">1 of 10</a>
-          									
-                                  		</div> -->
-                                  		
-                                  			<div class="form-group row col-sm-12 col-xs-12">
-                                     <button type="submit" class="btn btn-primary  waves-light">1 of 10</button>
-          									
-                                  		</div>
-                                  		
-                                 
-                                  		
-									</c:if> --%>
-                                            </form:form>
-                                             
-                                            
-                        		</div>
-                            </div><!-- end col-->
-                        </div>
-                        <!-- end row -->
-                    </div> <!-- container -->
-                </div> <!-- content -->
-
-            </div>
-            <!-- End content-page -->
+						<!-- END VALIDATION STATES-->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END CONTENT BODY -->
+	</div>
+	<!-- END CONTENT -->
 
 
-            <!-- ============================================================== -->
-            <!-- End Right content here -->
-            <!-- ============================================================== -->
-
-
-           
-
-            <footer class="footer text-right">
-                2016 © Lisi Aerospace.            </footer>
-
-
-        </div>
-        <!-- END wrapper -->
-
-
-   
-    </body>
+	<!-- END CONTAINER -->
+</body>

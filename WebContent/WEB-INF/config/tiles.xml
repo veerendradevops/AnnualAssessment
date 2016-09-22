@@ -58,7 +58,7 @@
 
 	<definition name="managerScreen" extends="managerDashboard.definition">
 		<put-attribute name="title" value="welcome"></put-attribute>
-		<put-attribute name="body" value="/WEB-INF/views/employeeDetails.jsp"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/exemptEmployeesList.jsp"></put-attribute>
 	</definition>
 
 
@@ -85,6 +85,19 @@
 		<put-attribute name="body"
 			value="/WEB-INF/ManagerAndTeamMember/meeting-summary.jsp"></put-attribute>
 	</definition>
+	
+	<definition name="meetingsummary" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/ManagerAndTeamMember/meeting-summary.jsp"></put-attribute>
+	</definition>
+	<definition name="acknowledgment" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/ManagerAndTeamMember/acknowledgment-section.jsp"></put-attribute>
+	</definition>
+	
+	
 <!--  review -->
 	<definition name="exempt.definition" template="/WEB-INF/views/managerDashboard.jsp">
 		<put-attribute name="title" value=""></put-attribute>

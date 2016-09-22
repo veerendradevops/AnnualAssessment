@@ -37,26 +37,26 @@ public class ExemptSection2ServiceImpl implements ExemptSection2Service{
 	}
 
 	@Override
-	public void fillExemptSection3(ExemptSection2 es) {
-       esdao.fillExemptSection3(es);		
+	public void fillExemptSection3(ExemptSection2 es,String year) {
+       esdao.fillExemptSection3(es,year);		
 	}
 
 	@Override
-	public List<ExemptSection2> retriveObjectAchievementData() {
+	public List<ExemptSection2> retriveObjectAchievementData(String empClockNumber,String year) {
 		
-		return esdao.retriveObjectAchievementData();
+		return esdao.retriveObjectAchievementData(empClockNumber,year);
 	}
 
 	@Override
-	public List<ExemptSection2> retriveManagerSkillsAssessmentData() {
+	public List<ExemptSection2> retriveManagerSkillsAssessmentData(String empClock,String year) {
 		
-		return esdao.retriveManagerSkillsAssessmentData();
+		return esdao.retriveManagerSkillsAssessmentData(empClock,year);
 	}
 
 	@Override
-	public String insertExemptSection2() {
+	public String insertExemptSection2(ExemptSection2 exemptorm) {
 		
-		return esdao.insertExemptSection2();
+		return esdao.insertExemptSection2(exemptorm);
 	}
 
 	@Override
@@ -66,9 +66,9 @@ public class ExemptSection2ServiceImpl implements ExemptSection2Service{
 	}
 
 	@Override
-	public List<ExemptSection2> retriveAssessmentSummaryData() {
+	public List<ExemptSection2> retriveAssessmentSummaryData(ExemptSection2 exemptorm) {
 		
-		return esdao.retriveAssessmentSummaryData();
+		return esdao.retriveAssessmentSummaryData(exemptorm);
 	}
 	
 

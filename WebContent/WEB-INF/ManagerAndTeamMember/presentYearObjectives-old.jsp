@@ -78,8 +78,11 @@
                                                 
                                      <div class="form-group row col-sm-12 col-xs-12">
           									
+											<button type="button" class="btn green" href="#">Back & Save</button>										
+											&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-secondary m-l-5">Next & Save</button>										
+										
           								<!-- 	<a href="development-goals-for-next-year.html" class="btn btn-secondary m-l-5">7 of 10</a> -->
-          								<input type="submit" value="7 of 10" class="btn btn-secondary m-l-5">
+<!--           								<input type="submit" value="7 of 10" class="btn btn-secondary m-l-5"> -->
                                   		</div>
                                             </form:form>
                                              

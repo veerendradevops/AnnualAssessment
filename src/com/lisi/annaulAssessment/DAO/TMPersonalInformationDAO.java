@@ -10,7 +10,7 @@ import com.lisi.annaualAssessment.orm.CensusForm;
 public interface TMPersonalInformationDAO {
 	
 	
-	public List<CensusForm> getEmployeeDetails(String empClockNumber);
+	public List<CensusForm> getEmployeeDetails(String empClockNumber,String currentYear);
 	
 
 }

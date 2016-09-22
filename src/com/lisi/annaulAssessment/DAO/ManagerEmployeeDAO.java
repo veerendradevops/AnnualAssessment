@@ -9,8 +9,10 @@ public interface ManagerEmployeeDAO {
 	
 	public void savePresentYearObjectives(PresentYearObjectives presentyearObj,String yearOfEmp) ;
 	
-	public List<PresentYearObjectives> retrievePresentYearObjectives();
+	public PresentYearObjectives retrievePresentYearObjectives(String clockNumber,String year);
 	
-	public void updateDevelopmentGoals(PresentYearObjectives developmentGoals);
+	public void updateDevelopmentGoals(PresentYearObjectives developmentGoals,String clock,String year);
+	
+	public void updateMeetingSummary(PresentYearObjectives meetingSummary);
 	
 }

@@ -11,10 +11,9 @@ import com.lisi.annaualAssessment.orm.ExemptSection2;
 public class ManagerSkillsAssessment {
 
 	public ExemptSection2 setFields(ExemptSection2 commaSeperatedValues, String t, int i) {
-
 		if (i == 0) {
 
-			commaSeperatedValues.setSkills1(t);
+			commaSeperatedValues.setSkills1(t);	
 
 		}
 		if (i == 1) {
@@ -45,11 +44,57 @@ public class ManagerSkillsAssessment {
 			commaSeperatedValues.setSkills10(t);
 		}
 
-		
-		
-		
-		
 		return commaSeperatedValues;
 	}
+	public ExemptSection2 setFieldsForwaysOfWorking(ExemptSection2 commaSeperatedValues,String t, int i){
+		
+		if(i==0){
+			commaSeperatedValues.setWaysOfWorking1(t);
+		}
+		if(i==1){
+			commaSeperatedValues.setWaysOfWorking2(t);
+		}
+		if(i==2){
+			commaSeperatedValues.setWaysOfWorking3(t);
+		}
+		if(i==3){
+			commaSeperatedValues.setWaysOfWorking4(t);
+		}
+		if(i==4){
+			commaSeperatedValues.setWaysOfWorking5(t);
+		}
+		if(i==5){
+			commaSeperatedValues.setWaysOfWorking6(t);
+		}
+		if(i==6){
+			commaSeperatedValues.setWaysOfWorking7(t);
+		}
+		return commaSeperatedValues;
+		
+	}
+public ExemptSection2 setFieldsForSelfManagementandLeadership(ExemptSection2 commaSeperatedValues,String t, int i){
+	if(i==0){
+		commaSeperatedValues.setSelfManagementandLeadership1(t);
+	}
+	if(i==1){
+		commaSeperatedValues.setSelfManagementandLeadership2(t);
+	}
+	if(i==2){
+		commaSeperatedValues.setSelfManagementandLeadership3(t);
+	}
+	if(i==3){
+		commaSeperatedValues.setSelfManagementandLeadership4(t);
+	}
+	if(i==4){
+		commaSeperatedValues.setSelfManagementandLeadership5(t);
+	}
+	if(i==5){
+		commaSeperatedValues.setSelfManagementandLeadership6(t);
+	}
+	if(i==6){
+		commaSeperatedValues.setSelfManagementandLeadership7(t);
+	}
+	return commaSeperatedValues;
+}
 
 }

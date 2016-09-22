@@ -21,16 +21,16 @@ public class NonExemptEmployeeServiceImpl implements NonExemptEmployeeService {
 	private NonExemptEmployeeDao nonExemptEmployeeDao;
 
 	@Override
-	public List<CensusForm> getEmployeeList() {
+	public List<CensusForm> getEmployeeList(String loginEmpClock) {
 
-		List<CensusForm> employeeList = nonExemptEmployeeDao.getEmployeeInformation();
+		List<CensusForm> employeeList = nonExemptEmployeeDao.getEmployeeInformation(loginEmpClock);
 		return employeeList;
 	}
 
 	@Override
-	public List<CensusForm> getNonExemptEmployeeList(String clockNumber) {
+	public List<CensusForm> getNonExemptEmployeeList(String clockNumber,String annaulYear) {
 
-		List<CensusForm> nonExemptEmployeeList = nonExemptEmployeeDao.getNonExemptEmployeeList( clockNumber);
+		List<CensusForm> nonExemptEmployeeList = nonExemptEmployeeDao.getNonExemptEmployeeList( clockNumber,annaulYear);
 		return nonExemptEmployeeList;
 	}
 
@@ -42,8 +42,8 @@ public class NonExemptEmployeeServiceImpl implements NonExemptEmployeeService {
 	
 	
 	@Override
-	public List<InterpersonalSkills> getInterpersonalData(String clockId) {
-		List<InterpersonalSkills> interpersonalList=nonExemptEmployeeDao.getInterpersonalList(clockId);
+	public List<InterpersonalSkills> getInterpersonalData(String clockId,String year) {
+		List<InterpersonalSkills> interpersonalList=nonExemptEmployeeDao.getInterpersonalList(clockId, year);
 		return interpersonalList;
 	}
 
@@ -56,8 +56,8 @@ public class NonExemptEmployeeServiceImpl implements NonExemptEmployeeService {
 	
 	
 	@Override
-	public List<JobKnowledgeAndSkill> getjobknowledgeData(String clockId) {
-		List<JobKnowledgeAndSkill> jobknowledgeList=nonExemptEmployeeDao.getJobKnowledgeList(clockId);
+	public List<JobKnowledgeAndSkill> getjobknowledgeData(String clockId,String empYear) {
+		List<JobKnowledgeAndSkill> jobknowledgeList=nonExemptEmployeeDao.getJobKnowledgeList(clockId,empYear);
 		return jobknowledgeList;
 	}
 
@@ -84,19 +84,19 @@ public class NonExemptEmployeeServiceImpl implements NonExemptEmployeeService {
 
 	
 	@Override
-	public List<AcknowledgmentSection> getAcknowledgementData(String empClockNumber) {
-		List<AcknowledgmentSection> getAcknowledgementData=nonExemptEmployeeDao.getAcknowledgementData(empClockNumber);
+	public List<AcknowledgmentSection> getAcknowledgementData(String empClockNumber,String year) {
+		List<AcknowledgmentSection> getAcknowledgementData=nonExemptEmployeeDao.getAcknowledgementData(empClockNumber,year);
 		return getAcknowledgementData;
 	}
-	@Override
+	/*@Override
 	public void addNonExemptTrainingorDevelopmenData(TrainingAndDevelopment trainingAndDevelopement) {
 		nonExemptEmployeeDao.addNonExemptTrainingorDevelopmenData(trainingAndDevelopement);
 		
 	}
-	
+	*/
 	@Override
-	public List<TrainingAndDevelopment> getTrainingAndDevelopmentData(String empClockNumber) {
-		List<TrainingAndDevelopment> getTrainingAndDevelopmentData=nonExemptEmployeeDao.getTrainingAndDevelopmentData(empClockNumber);
+	public List<TrainingAndDevelopment> getTrainingAndDevelopmentData(String empClockNumber,String empYear) {
+		List<TrainingAndDevelopment> getTrainingAndDevelopmentData=nonExemptEmployeeDao.getTrainingAndDevelopmentData(empClockNumber,empYear);
 		return getTrainingAndDevelopmentData;
 	}
 		
@@ -135,9 +135,15 @@ public class NonExemptEmployeeServiceImpl implements NonExemptEmployeeService {
 	}
 
 	@Override
-	public String getYear(String ormClass) {
-		String year=nonExemptEmployeeDao.getYear(ormClass);
+	public String getYear(String ormClass,String empClock,String empyear) {
+		String year=nonExemptEmployeeDao.getYear(ormClass,empClock,empyear);
 		return year;
+	}
+
+	@Override
+	public String getInterpersonalAvgScore(String nonexemptEmpClock,String employeeYear) {
+		String avgScore=nonExemptEmployeeDao.getInterpersonalAvgScore(nonexemptEmpClock,employeeYear);
+		return avgScore;
 	}
 
 	
