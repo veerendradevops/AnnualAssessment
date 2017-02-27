@@ -73,8 +73,8 @@ public class CensusFileUploadController {
 	@Autowired
 	private UploadFormService uploadFormService;
 
-	@Autowired
-	private TMPersonalInformationService tmservice;
+/*	@Autowired
+	private TMPersonalInformationService tmservice;*/
 
 	@Autowired
 	private LoginUser loginUser;
