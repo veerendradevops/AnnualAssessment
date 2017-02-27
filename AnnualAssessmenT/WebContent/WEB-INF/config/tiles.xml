@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<!-- login form -->
+
+	<definition name="base.definition" template="/WEB-INF/views/welcomeTemplate.jsp">
+		<put-attribute name="title" value=""></put-attribute>
+		<put-attribute name="topScreen" value=""></put-attribute>
+		
+		<put-attribute name="leftScreen" value=""></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+		<put-attribute name="footerScreen" value="/WEB-INF/views/footer.jsp"></put-attribute>
+	</definition>
+
+	<!-- supervisor form -->
+
+	<definition name="managerDashboard.definition" template="/WEB-INF/views/managerDashboard.jsp">
+		<put-attribute name="title" value=""></put-attribute>
+		<put-attribute name="topScreen" value="/WEB-INF/views/top-nav.jsp"></put-attribute>
+		<!-- <put-attribute name="menu" value="/WEB-INF/views/menu.jsp"></put-attribute> -->
+		<put-attribute name="leftScreen"
+			value="/WEB-INF/views/manager-supervisor-left-nav.jsp"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+		<put-attribute name="footerScreen" value="/WEB-INF/views/footer.jsp"></put-attribute>
+	</definition>
+
+	<!-- exempt employee form -->
+
+	<definition name="exemptEmployee-supervisor" template="/WEB-INF/views/ExemptTemplate.jsp">
+		<put-attribute name="title" value=""></put-attribute>
+		<put-attribute name="topScreen" value="/WEB-INF/views/top-nav.jsp"></put-attribute>
+		<!-- <put-attribute name="menu" value="/WEB-INF/views/menu.jsp"></put-attribute> -->
+		<put-attribute name="leftScreen" value="/WEB-INF/views/exempt-left-nav.jsp"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+		<put-attribute name="footerScreen" value="/WEB-INF/views/footer.jsp"></put-attribute>
+	</definition>
+
+	<!-- login -->
+
+	<definition name="loginScreen" extends="base.definition">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/loginPage.jsp"></put-attribute>
+	</definition>
+
+	<definition name="uploadForm" extends="managerDashboard.definition">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/file-upload.jsp"></put-attribute>
+	</definition>
+
+
+	<definition name="managerScreen" extends="managerDashboard.definition">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/exemptEmployeesList.jsp"></put-attribute>
+	</definition>
+
+
+
+	<!-- Manager and Team member forms -->
+
+
+	<definition name="presentYearObjectives" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/ManagerAndTeamMember/presentYearObjectives.jsp"></put-attribute>
+	</definition>
+
+
+
+	<definition name="goalsForNextYear" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/ManagerAndTeamMember/development-goals-for-next-year.jsp"></put-attribute>
+	</definition>
+
+	<definition name="meetingsummary" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/ManagerAndTeamMember/meeting-summary.jsp"></put-attribute>
+	</definition>
+
+	<definition name="meetingsummary" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/ManagerAndTeamMember/meeting-summary.jsp"></put-attribute>
+	</definition>
+	<definition name="acknowledgment" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/ManagerAndTeamMember/acknowledgment-section.jsp"></put-attribute>
+	</definition>
+
+
+	<!-- review -->
+	<definition name="exempt.definition" template="/WEB-INF/views/managerDashboard.jsp">
+		<put-attribute name="title" value=""></put-attribute>
+		<put-attribute name="topScreen" value="/WEB-INF/views/top-nav.jsp"></put-attribute>
+
+		<put-attribute name="leftScreen" value="/WEB-INF/views/exempt-left-nav.jsp"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+		<put-attribute name="footerScreen" value=""></put-attribute>
+	</definition>
+
+
+	<!-- non-exempt employee dashboard -->
+
+	<definition name="nonexempt.definition" template="/WEB-INF/views/nonExemptTemplate.jsp">
+		<put-attribute name="title" value=""></put-attribute>
+		<put-attribute name="topScreen" value="/WEB-INF/views/top-nav.jsp"></put-attribute>
+		<!--<put-attribute name="menu" value="/WEB-INF/views/.....jsp"></put-attribute> -->
+		<put-attribute name="leftScreen"
+			value="/WEB-INF/nonexempt/non-exempt-left-nav.jsp"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+		<put-attribute name="footerScreen" value=""></put-attribute>
+	</definition>
+	<definition name="nonExemptEmployeeList" extends="managerDashboard.definition">
+		<put-attribute name="title" value="EmpList"></put-attribute>
+		<!-- <put-attribute name="leftScreen" value="/WEB-INF/views/manager-supervisor-left-nav.jsp"></put-attribute> -->
+		<put-attribute name="body"
+			value="/WEB-INF/nonexempt/nonexemptEmployeeList.jsp"></put-attribute>
+	</definition>
+	<definition name="teammemberInformation" extends="nonexempt.definition">
+		<put-attribute name="title" value="TeamMemberInformationList"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/nonexempt/team-member-personal-information.jsp"></put-attribute>
+	</definition>
+	<definition name="interpersonal-skills" extends="nonexempt.definition">
+		<put-attribute name="title" value="InterpersonalSkillsList"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/nonexempt/interpersonal-skills.jsp"></put-attribute>
+	</definition>
+	<definition name="job-knowledge-skills" extends="nonexempt.definition">
+		<put-attribute name="title" value="JobKnowledgeSkillsList"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/nonexempt/job-knowledge-skills.jsp"></put-attribute>
+	</definition>
+
+	<definition name="summary-of-performance-review" extends="nonexempt.definition">
+		<put-attribute name="title" value="NonExemptSummary"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/nonexempt/summary-of-performance-review.jsp"></put-attribute>
+	</definition>
+
+	<definition name="acknowledgment-section" extends="nonexempt.definition">
+		<put-attribute name="title" value="NonExemptAcknowledgmentSection"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/nonexempt/acknowledgment-section.jsp"></put-attribute>
+	</definition>
+	<definition name="training-development" extends="nonexempt.definition">
+		<put-attribute name="title" value="NonExemptAcknowledgmentSection"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/nonexempt/training-development.jsp"></put-attribute>
+	</definition>
+
+	<!-- team member -->
+
+	<definition name="exemptEmployee" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/employee/team-member-personal-information.jsp"></put-attribute>
+	</definition>
+
+
+	<definition name="review-of-past-year" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/employee/review-of-past-year.jsp"></put-attribute>
+	</definition>
+
+
+	<definition name="SkillsSelfAssessment" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/employee/skills-self-assessment.jsp"></put-attribute>
+	</definition>
+
+	<!-- manager -->
+	
+
+	<definition name="objectiveAchievement" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/manager/objective-achievement.jsp"></put-attribute>
+	</definition>
+
+	<definition name="objectiveAchievementOperation" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/manager/objective-achievement.jsp"></put-attribute>
+	</definition>
+
+	<definition name="managersskillassessment" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/manager/managers-skill-assessment.jsp"></put-attribute>
+	</definition>
+
+	<definition name="assessmentsummary" extends="exemptEmployee-supervisor">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/manager/assessment-summary.jsp"></put-attribute>
+	</definition>
+
+	<!-- Mani End -->
+
+	<!-- Begin Reports -->
+
+	<definition name="home.definition" template="/WEB-INF/views/homeTemplate.jsp">
+		<put-attribute name="title" value=""></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+	</definition>
+
+	<definition name="exemptReport" extends="home.definition">
+		<put-attribute name="title" value="Exempt Report Page"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/exemptReport.jsp"></put-attribute>
+	</definition>
+
+	<definition name="nonExemptReport" extends="home.definition">
+		<put-attribute name="title" value="Non Exempt Report Page"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/nonExemptReport.jsp"></put-attribute>
+	</definition>
+
+	<!-- End Reports -->
+	<!-- -HRMANAGER DASHBOARD -->
+	<!-- <definition name="hrDashboard" extends="managerDashboard.definition">
+		<put-attribute name="title" value="HREmpList"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/dashboard-hr.jsp"></put-attribute>
+	</definition> -->
+	
+	<!-- hr dashboard -->
+	
+<!-- 	<definition name="hrmanagerDashboard.definition" template="/WEB-INF/views/hrManagerDashboard.jsp">
+		<put-attribute name="title" value=""></put-attribute>
+		<put-attribute name="topScreen" value="/WEB-INF/views/top-nav.jsp"></put-attribute>
+		<put-attribute name="menu" value="/WEB-INF/views/menu.jsp"></put-attribute>
+		<put-attribute name="leftScreen"
+			value="/WEB-INF/views/manager-supervisor-left-nav.jsp"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+		<put-attribute name="footerScreen" value=""></put-attribute>
+	</definition> -->
+	
+	<!-- hr manager -->
+	
+	<definition name="hrDashboard" extends="managerDashboard.definition">
+		<put-attribute name="title" value="hr dashboard"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/hrForms/hrDashboard.jsp"></put-attribute>
+	</definition>
+	
+	<definition name="hrDashboardEmployeeView" extends="managerDashboard.definition">
+		<put-attribute name="title" value="hr dashboard"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/hrForms/hrDashboardEmployeeView.jsp"></put-attribute>
+	</definition>
+	
+	<definition name="csvreports" extends="managerDashboard.definition">
+		<put-attribute name="title" value="hr dashboard"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/hrForms/csvreports.jsp"></put-attribute>
+	</definition>
+	
+	<!--  salary review for exempt and non exempt  -->
+	
+	<definition name="salaryreview" extends="exemptEmployee-supervisor">
+	<put-attribute name="title" value="welcome"></put-attribute>
+	<put-attribute name="body" value="/WEB-INF/ManagerAndTeamMember/salary-review.jsp"></put-attribute>
+	</definition>
+	
+	<definition name="nonsalaryreview" extends="nonexempt.definition">
+	<put-attribute name="title" value="welcome"></put-attribute>
+	<put-attribute name="body" value="/WEB-INF/nonexempt/nonsalary-review.jsp"></put-attribute>
+	</definition>
+	<!-- Scan Documents -->
+	<definition name="sharedPdf" extends="managerDashboard.definition">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="body" value="/WEB-INF/views/sharedPdf.jsp"></put-attribute>
+	</definition>
+	
+</tiles-definitions> 
